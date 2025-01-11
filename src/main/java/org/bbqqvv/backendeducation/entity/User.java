@@ -40,7 +40,7 @@ public class User {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         if (this.authorities == null) {
-            this.authorities = Set.of(Role.ROLE_USER); // Mặc định ROLE_USER
+            this.authorities = Set.of(Role.ROLE_USER);
         }
     }
 
