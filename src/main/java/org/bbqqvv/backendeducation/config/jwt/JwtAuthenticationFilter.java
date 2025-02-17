@@ -29,10 +29,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = extractTokenFromRequest(request);
         
-        if (token != null && jwtTokenUtil.validateToken(token, getUsernameFromToken(token))) {
-        	// Lấy thông tin người dùng từ token
-            String username = getUsernameFromToken(token);
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+        if (token != null && jwtTokenUtil.validateToken(token, getEmailFromToken(token))) {
+            String email = getEmailFromToken(token);
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
             
             // Tạo Authentication từ UserDetails
             UsernamePasswordAuthenticationToken authenticationToken = 
@@ -53,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    private String getUsernameFromToken(String token) {
-        return jwtTokenUtil.extractUsername(token);
+    private String getEmailFromToken(String token) {
+        return jwtTokenUtil.extractEmail(token);
     }
 }

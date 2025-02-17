@@ -18,7 +18,8 @@ public enum ErrorCode {
     USER_UNAUTHORIZED(1005, "User is not authorized", HttpStatus.UNAUTHORIZED),
     USER_ACCESS_DENIED(1006, "Access denied for user with ID: {id}", HttpStatus.FORBIDDEN),
     USER_EXISTED(1007, "User existed", HttpStatus.BAD_REQUEST),
-
+    EMAIL_EXISTED(1008, "Email existed", HttpStatus.BAD_REQUEST),
+    WRONG_PASSWORD(1009, "Wrong password", HttpStatus.BAD_REQUEST),
     // 5000 Series - Account Errors
     ACCOUNT_DISABLED(5001, "Account is disabled", HttpStatus.FORBIDDEN),
     // 7000 Series - Validation Errors

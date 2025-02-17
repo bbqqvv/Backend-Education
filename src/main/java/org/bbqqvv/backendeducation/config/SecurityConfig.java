@@ -41,7 +41,8 @@ public class SecurityConfig {
 	private static final String[] SECURED_URL_PATTERNS = {
 			"/api/**",
 			"/admin/**",
-			"/user/**"
+			"/teacher/**",
+			"/student/**"
 	};
 
 	// Cấu hình SecurityFilterChain

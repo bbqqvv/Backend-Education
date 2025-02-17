@@ -2,9 +2,13 @@ package org.bbqqvv.backendeducation.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.bbqqvv.backendeducation.dto.ApiResponse;
+import org.bbqqvv.backendeducation.dto.request.ChangePasswordRequest;
+import org.bbqqvv.backendeducation.dto.request.ChangeProfileRequest;
 import org.bbqqvv.backendeducation.dto.request.UserCreationRequest;
 import org.bbqqvv.backendeducation.dto.response.UserResponse;
 import org.bbqqvv.backendeducation.service.UserService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -24,6 +28,22 @@ public class UserController {
                 .data(userResponse)
                 .build();
     }
+    @PutMapping("/change-password")
+    public ApiResponse<String> changePassword(@RequestBody @Valid ChangePasswordRequest request,
+                                              @AuthenticationPrincipal UserDetails userDetails) {
+        userService.changePassword(userDetails.getUsername(), request);
+        return ApiResponse.<String>builder()
+                .data("Password updated successfully")
+                .build();
+    }
+//    @PutMapping("/profile")
+//    public ApiResponse<UserResponse> updateProfile(@RequestBody ChangeProfileRequest request,
+//                                                   @AuthenticationPrincipal UserDetails userDetails) {
+//        UserResponse updatedUser = userService.updateUserProfile(userDetails.getUsername(), request);
+//        return ApiResponse.<UserResponse>builder()
+//                .data(updatedUser)
+//                .build();
+//    }
 
     // Lấy người dùng theo ID
     @GetMapping("/{id}")

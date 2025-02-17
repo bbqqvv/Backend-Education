@@ -9,13 +9,11 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    // Ánh xạ UserCreationRequest thành User
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "authorities", expression = "java(java.util.Set.of(org.bbqqvv.backendeducation.entity.Role.ROLE_USER))")
+    @Mapping(target = "roles", expression = "java(java.util.Set.of(org.bbqqvv.backendeducation.entity.Role.valueOf(request.getRole())))") // Chuyển đổi String thành Enum Role
     User toUser(UserCreationRequest request);
 
-    // Ánh xạ User thành UserResponse
-    @Mapping(target = "authorities", ignore = false)
+    @Mapping(target = "role", expression = "java(user.getRoles().stream().map(role -> role.name()).collect(java.util.stream.Collectors.joining(\", \")))") // Chuyển Set<Role> về String
     UserResponse toUserResponse(User user);
 }

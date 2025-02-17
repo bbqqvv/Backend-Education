@@ -24,18 +24,18 @@ public class JwtTokenUtil {
         this.expiration = jwtConfigProperties.getExpiration();
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String email) {
     	return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(secretKey, SignatureAlgorithm.HS256)  // Sử dụng secretKey dưới dạng byte[]
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
     
     
     // Trích xuất username từ JWT
-    public String extractUsername(String token) {
+    public String extractEmail(String token) {
         return extractClaims(token).getSubject();
     }
 
@@ -54,7 +54,7 @@ public class JwtTokenUtil {
     }
 
     // Kiểm tra tính hợp lệ của token
-    public boolean validateToken(String token, String username) {
-        return (username.equals(extractUsername(token)) && !isTokenExpired(token));
+    public boolean validateToken(String token, String email) {
+        return (email.equals(extractEmail(token)) && !isTokenExpired(token));
     }
 }

@@ -13,54 +13,48 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User {
 
     @Id
     private String id;
 
-    @Field(name = "username")
-    private String username;
+    @Field(name = "email")
+    private String email;
 
     @Field(name = "password")
     private String password;
 
-    @Field(name = "email")
-    private String email;
+    @Field(name = "full_name")
+    private String fullName;
 
-    @Field(name = "role")
-    private Set<Role> authorities;
+    @Field(name = "student_id")
+    private String studentId;
 
-    @Field(name = "createdAt")
+    @Field(name = "student_class")
+    private String studentClass;
+
+    @Field(name = "roles")
+    private Set<Role> roles; // Role Enum, có thể là Set nếu muốn một người dùng có nhiều quyền
+
+    @Field(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Field(name = "updatedAt")
+    @Field(name = "updated_at")
     private LocalDateTime updatedAt;
 
+
+    // Tạo tài khoản mặc định khi khởi tạo
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
-        if (this.authorities == null) {
-            this.authorities = Set.of(Role.ROLE_USER);
+        if (this.roles == null || this.roles.isEmpty()) {
+            this.roles = Set.of(Role.ROLE_STUDENT); // Mặc định nếu chưa có giá trị, sẽ gán ROLE_STUDENT
         }
     }
 
+    // Cập nhật tài khoản
     public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    // Constructor với các tham số
-    public User(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        onCreate();  // Gọi onCreate khi tạo user mới
-    }
-
-    public User(String username, String password, String email, Role role) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.authorities = Set.of(role);
-        onCreate();  // Gọi onCreate khi tạo user mới với quyền cụ thể
     }
 }

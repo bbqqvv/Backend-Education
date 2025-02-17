@@ -12,9 +12,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class AuthenticationService {
-
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -29,24 +30,53 @@ public class AuthenticationService {
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
     }
+
+    // Đăng ký người dùng mới
     public UserResponse register(UserCreationRequest registerUserDto) {
-        ValidateUtils.validateUsername(registerUserDto.getUsername());
-        if (userService.existsByUsername(registerUserDto.getUsername())) {
-            throw new RuntimeException("Username already exists");
+        // Kiểm tra email hợp lệ
+        ValidateUtils.validateEmail(registerUserDto.getEmail());
+
+        // Kiểm tra nếu email đã tồn tại
+        if (userService.existsByEmail(registerUserDto.getEmail())) {
+            throw new RuntimeException("Email already exists");
         }
-        String encodedPassword = passwordEncoder.encode(registerUserDto.getPassword());
+
+        // Tạo mật khẩu ngẫu nhiên và mã hóa nó
+        String rawPassword = generateRandomPassword();
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+
+        // Tạo đối tượng UserCreationRequest mới với mật khẩu đã mã hóa
         UserCreationRequest userRequest = UserCreationRequest.builder()
-                .username(registerUserDto.getUsername())
-                .password(encodedPassword)
+                .fullName(registerUserDto.getFullName())
                 .email(registerUserDto.getEmail())
+                .password(encodedPassword)
+                .studentId(registerUserDto.getStudentId())
+                .studentClass(registerUserDto.getStudentClass())
+                .role(registerUserDto.getRole())
                 .build();
-        return userService.createUser(userRequest);
+
+        // Tạo user và lưu vào cơ sở dữ liệu
+        UserResponse userResponse = userService.createUser(userRequest);
+
+        // Trả lại mật khẩu gốc để gửi qua email cho người dùng
+        userResponse.setPassword(rawPassword);
+
+        return userResponse;
     }
 
+    // Đăng nhập
     public String login(AuthenticationRequest loginUserDto) {
+        // Sử dụng email thay vì username để xác thực
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginUserDto.getUsername(), loginUserDto.getPassword())
+                new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword())
         );
-        return jwtTokenUtil.generateToken(((org.springframework.security.core.userdetails.User)authentication.getPrincipal()).getUsername());
+        return jwtTokenUtil.generateToken(((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername());
+    }
+
+    // ===============================
+    // 🚀 Private method: Tạo mật khẩu ngẫu nhiên
+    // ===============================
+    private String generateRandomPassword() {
+        return UUID.randomUUID().toString().substring(0, 8); // Tạo mật khẩu ngẫu nhiên dài 8 ký tự
     }
 }
