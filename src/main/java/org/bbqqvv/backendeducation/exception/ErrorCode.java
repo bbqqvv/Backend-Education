@@ -29,6 +29,8 @@ public enum ErrorCode {
     LEAVE_NOT_FOUND(2004, "Leave not found", HttpStatus.NOT_FOUND),
     INVALID_INPUT(2005, "Invalid input", HttpStatus.BAD_REQUEST),
     LEAVE_CANNOT_BE_DELETED(2006, "Leave can't be deleted", HttpStatus.BAD_REQUEST),
+    SCHEDULE_CONFLICT(2007, "Schedule conflict", HttpStatus.CONFLICT),
+    TIME_TABLE_NOT_FOUND(2008, "Time table not found", HttpStatus.NOT_FOUND),
     // 5000 Series - Account Errors
     ACCOUNT_DISABLED(5001, "Account is disabled", HttpStatus.FORBIDDEN),
     // 7000 Series - Validation Errors
