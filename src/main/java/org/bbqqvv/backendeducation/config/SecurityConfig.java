@@ -42,7 +42,9 @@ public class SecurityConfig {
 			"/auth/forgot-password",
 			"/auth/verify-otp",
 			"/auth/reset-password",
-			"/api/newsletters/**"
+			"/api/newsletters/**",
+			"/api/quotes/**"
+
 
 	};
 	private static final String[] SECURED_URL_PATTERNS = {

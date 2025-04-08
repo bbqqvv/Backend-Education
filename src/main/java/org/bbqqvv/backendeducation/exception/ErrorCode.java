@@ -25,6 +25,7 @@ public enum ErrorCode {
     NEWSLETTER_NOT_FOUND(2000, "Newsletter not found", HttpStatus.NOT_FOUND),
     IMAGE_UPLOAD_FAILED(2001, "Image upload failed", HttpStatus.INTERNAL_SERVER_ERROR),
     VIOLATION_NOT_FOUND(2002, "Violation not found", HttpStatus.NOT_FOUND),
+    QUOTE_NOT_FOUND(2003, "Quote not found", HttpStatus.NOT_FOUND),
     // 5000 Series - Account Errors
     ACCOUNT_DISABLED(5001, "Account is disabled", HttpStatus.FORBIDDEN),
     // 7000 Series - Validation Errors
