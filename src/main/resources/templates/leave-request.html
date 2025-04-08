@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thông báo nghỉ dạy</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; color: #333; }
+        .container { padding: 20px; }
+        .highlight { font-weight: bold; }
+        .footer { margin-top: 30px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <p>Kính gửi phụ huynh và học sinh lớp <span class="highlight" th:text="${className}">10A1</span>,</p>
+
+    <p>Giáo viên <span class="highlight" th:text="${teacherName}">Nguyễn Văn A</span> xin nghỉ từ
+        <span class="highlight" th:text="${fromDate}">2024-04-01</span> đến
+        <span class="highlight" th:text="${toDate}">2024-04-03</span>.</p>
+
+    <p>Lý do: <em th:text="${reason}">Bận việc cá nhân</em></p>
+
+    <div class="footer">
+        <p>Trân trọng,<br>Nhà trường</p>
+    </div>
+</div>
+</body>
+</html>

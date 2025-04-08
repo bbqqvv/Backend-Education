@@ -26,6 +26,9 @@ public enum ErrorCode {
     IMAGE_UPLOAD_FAILED(2001, "Image upload failed", HttpStatus.INTERNAL_SERVER_ERROR),
     VIOLATION_NOT_FOUND(2002, "Violation not found", HttpStatus.NOT_FOUND),
     QUOTE_NOT_FOUND(2003, "Quote not found", HttpStatus.NOT_FOUND),
+    LEAVE_NOT_FOUND(2004, "Leave not found", HttpStatus.NOT_FOUND),
+    INVALID_INPUT(2005, "Invalid input", HttpStatus.BAD_REQUEST),
+    LEAVE_CANNOT_BE_DELETED(2006, "Leave can't be deleted", HttpStatus.BAD_REQUEST),
     // 5000 Series - Account Errors
     ACCOUNT_DISABLED(5001, "Account is disabled", HttpStatus.FORBIDDEN),
     // 7000 Series - Validation Errors
