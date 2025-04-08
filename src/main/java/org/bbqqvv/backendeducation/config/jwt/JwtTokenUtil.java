@@ -4,11 +4,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.bbqqvv.backendeducation.util.KeyUtil;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.util.Collection;
 import java.util.Date;
-
+import java.util.List;
 
 
 @Component
@@ -24,15 +26,16 @@ public class JwtTokenUtil {
         this.expiration = jwtConfigProperties.getExpiration();
     }
 
-    public String generateToken(String email) {
-    	return Jwts.builder()
+    public String generateToken(String email, Collection<? extends GrantedAuthority> roles) {
+        return Jwts.builder()
                 .setSubject(email)
+                .claim("roles", roles.stream().map(GrantedAuthority::getAuthority).toList())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
-    
+
     
     // Trích xuất username từ JWT
     public String extractEmail(String token) {
@@ -57,4 +60,13 @@ public class JwtTokenUtil {
     public boolean validateToken(String token, String email) {
         return (email.equals(extractEmail(token)) && !isTokenExpired(token));
     }
+
+    public Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
 }

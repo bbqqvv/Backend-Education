@@ -3,7 +3,6 @@ package org.bbqqvv.backendeducation.controller;
 import lombok.RequiredArgsConstructor;
 import org.bbqqvv.backendeducation.dto.ApiResponse;
 import org.bbqqvv.backendeducation.dto.request.ChangePasswordRequest;
-import org.bbqqvv.backendeducation.dto.request.ChangeProfileRequest;
 import org.bbqqvv.backendeducation.dto.request.UserCreationRequest;
 import org.bbqqvv.backendeducation.dto.response.UserResponse;
 import org.bbqqvv.backendeducation.service.UserService;

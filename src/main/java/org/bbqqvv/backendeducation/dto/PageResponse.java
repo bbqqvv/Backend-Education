@@ -6,8 +6,8 @@ import lombok.experimental.FieldDefaults;
 import java.util.Collections;
 import java.util.List;
 
-
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -18,5 +18,5 @@ public class PageResponse<T> {
     int pageSize;
     long totalElements;
     @Builder.Default
-    private List<T> data = Collections.emptyList();
- }
+    private List<T> items = Collections.emptyList();
+}

@@ -20,6 +20,10 @@ public enum ErrorCode {
     USER_EXISTED(1007, "User existed", HttpStatus.BAD_REQUEST),
     EMAIL_EXISTED(1008, "Email existed", HttpStatus.BAD_REQUEST),
     WRONG_PASSWORD(1009, "Wrong password", HttpStatus.BAD_REQUEST),
+
+    // 2000 - CRUD
+    NEWSLETTER_NOT_FOUND(2000, "Newsletter not found", HttpStatus.NOT_FOUND),
+    IMAGE_UPLOAD_FAILED(2001, "Image upload failed", HttpStatus.INTERNAL_SERVER_ERROR),
     // 5000 Series - Account Errors
     ACCOUNT_DISABLED(5001, "Account is disabled", HttpStatus.FORBIDDEN),
     // 7000 Series - Validation Errors

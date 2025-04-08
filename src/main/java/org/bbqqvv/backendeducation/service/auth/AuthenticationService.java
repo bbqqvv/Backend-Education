@@ -66,11 +66,16 @@ public class AuthenticationService {
 
     // Đăng nhập
     public String login(AuthenticationRequest loginUserDto) {
-        // Sử dụng email thay vì username để xác thực
+        // Xác thực người dùng
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword())
         );
-        return jwtTokenUtil.generateToken(((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername());
+
+        org.springframework.security.core.userdetails.User userDetails =
+                (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+
+        // Tạo token chứa roles
+        return jwtTokenUtil.generateToken(userDetails.getUsername(), userDetails.getAuthorities());
     }
 
     // ===============================

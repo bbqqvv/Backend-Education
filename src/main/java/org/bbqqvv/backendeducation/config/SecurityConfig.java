@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,6 +23,8 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity// Đảm bảo có dòng này thì @PreAuthorize("hasRole('ADMIN')") ở controller mới hoạt động
+
 public class SecurityConfig {
 
 	private final CustomUserDetailsService customUserDetailsService;
@@ -35,7 +39,10 @@ public class SecurityConfig {
 	private static final String[] WHITE_LIST_URL = {
 			"/auth/login",
 			"/auth/register",
-
+			"/auth/forgot-password",
+			"/auth/verify-otp",
+			"/auth/reset-password",
+			"/api/newsletters/**"
 
 	};
 	private static final String[] SECURED_URL_PATTERNS = {
@@ -81,7 +88,7 @@ public class SecurityConfig {
 	private UrlBasedCorsConfigurationSource corsConfigurationSource() {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
-		config.addAllowedOrigin("http://localhost:8081");  // Cho phép origin này
+		config.setAllowedOrigins(List.of("http://localhost:8081", "http://192.168.1.10:8081")); // Thêm IP Expo
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.addAllowedHeader("*");
 		config.setAllowCredentials(true);

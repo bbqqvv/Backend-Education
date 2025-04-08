@@ -2,7 +2,6 @@ package org.bbqqvv.backendeducation.service.auth;
 
 import org.bbqqvv.backendeducation.entity.User;
 import org.bbqqvv.backendeducation.repository.UserRepository;
-import org.bbqqvv.backendeducation.service.UserService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
