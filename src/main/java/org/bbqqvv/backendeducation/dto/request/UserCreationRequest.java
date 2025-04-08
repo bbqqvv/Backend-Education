@@ -10,7 +10,7 @@ public class UserCreationRequest {
     private String fullName;
     private String email;
     private String password;
-    private String studentId;
+    private String studentCode;
     private String studentClass;
     private String role;
 }

@@ -28,8 +28,8 @@ public class User {
     @Field(name = "full_name")
     private String fullName;
 
-    @Field(name = "student_id")
-    private String studentId;
+    @Field(name = "student_code")
+    private String studentCode;
 
     @Field(name = "student_class")
     private String studentClass;
