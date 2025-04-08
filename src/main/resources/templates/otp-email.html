@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OTP Verification</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      line-height: 1.6;
+      color: #444;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 30px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .logo {
+      width: 150px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .otp-code {
+      background-color: #f5f7fa;
+      border-left: 4px solid #ff4081;
+      padding: 15px;
+      margin: 25px 0;
+      font-size: 24px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-align: center;
+      color: #2c3e50;
+    }
+    .footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #7f8c8d;
+      text-align: center;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+    .highlight {
+      color: #ff4081;
+      font-weight: 600;
+    }
+    .button {
+      display: inline-block;
+      background-color: #ff4081;
+      color: white;
+      padding: 12px 25px;
+      text-decoration: none;
+      border-radius: 4px;
+      margin: 15px 0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <img src="cid:logo" alt="Company Logo" class="logo">
+    <h1>Xác minh OTP</h1>
+  </div>
+
+  <p>Xin chào,</p>
+  <p>Chúng tôi nhận được yêu cầu đặt lại mật khẩu từ bạn. Vui lòng sử dụng mã OTP bên dưới để hoàn tất quá trình xác minh.</p>
+
+  <div class="otp-code" th:text="${otp}">123456</div>
+
+  <p>Mã OTP này có hiệu lực trong <span class="highlight" th:text="${expiration}">5</span> phút. Vui lòng không chia sẻ mã này với bất kỳ ai.</p>
+
+  <p>Nếu bạn không yêu cầu mã này, vui lòng bỏ qua email này hoặc liên hệ với bộ phận hỗ trợ của chúng tôi.</p>
+
+  <div class="footer">
+    <p>Trân trọng,<br>Đội ngũ hỗ trợ</p>
+    <p>© 2025 Công ty của bạn. Tất cả quyền được bảo lưu.</p>
+  </div>
+</div>
+</body>
+</html>
