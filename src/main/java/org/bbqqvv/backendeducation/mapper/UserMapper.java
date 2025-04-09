@@ -16,5 +16,6 @@ public interface UserMapper {
 
     @Mapping(target = "role", expression = "java(user.getRoles().stream().map(role -> role.name()).collect(java.util.stream.Collectors.joining(\", \")))")
     @Mapping(target = "profile", source = "profile") // ánh xạ sang UserProfileResponse
+    @Mapping(target = "id", source = "user.id")
     UserResponse toUserResponse(User user, UserProfile profile);
 }

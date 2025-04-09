@@ -95,7 +95,7 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
             leave.setStatus(LeaveStatus.APPROVED);
             leave.setUpdatedAt(LocalDateTime.now());
 
-            List<User> students = userRepository.findByRolesAndClassName(Role.ROLE_STUDENT, leave.getClassName());
+            List<User> students = userRepository.findByRolesAndStudentClass(Role.ROLE_STUDENT, leave.getClassName());
             for (User student : students) {
                 Map<String, Object> model = buildEmailModel(leave);
                 emailService.sendLeaveRequestEmail(student.getEmail(), model);
@@ -109,7 +109,6 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
             leave.setRejectionReason(request.getRejectionReason());
             leave.setUpdatedAt(LocalDateTime.now());
         }
-
         leaveRequestRepository.save(leave);
         return leaveRequestMapper.toLeaveRequestResponse(leave);
     }

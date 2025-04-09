@@ -20,6 +20,7 @@ public enum ErrorCode {
     USER_EXISTED(1007, "User existed", HttpStatus.BAD_REQUEST),
     EMAIL_EXISTED(1008, "Email existed", HttpStatus.BAD_REQUEST),
     WRONG_PASSWORD(1009, "Wrong password", HttpStatus.BAD_REQUEST),
+    FORBIDDEN(1010, "Forbidden", HttpStatus.FORBIDDEN),
 
     // 2000 - CRUD
     NEWSLETTER_NOT_FOUND(2000, "Newsletter not found", HttpStatus.NOT_FOUND),

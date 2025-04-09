@@ -3,6 +3,7 @@ package org.bbqqvv.backendeducation.dto.response;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -15,6 +16,7 @@ public class UserResponse {
     private String fullName;
     private String studentCode;
     private String studentClass;
+    private Set<String> teachingClasses;
     private String role;
     private UserProfileResponse profile;
     private LocalDateTime createdAt;

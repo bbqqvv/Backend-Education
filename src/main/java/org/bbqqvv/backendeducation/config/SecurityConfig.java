@@ -43,7 +43,9 @@ public class SecurityConfig {
 			"/auth/verify-otp",
 			"/auth/reset-password",
 			"/api/newsletters/**",
-			"/api/quotes/**"
+			"/api/quotes/**",
+			"/api/leave-requests/**",
+			"/api/violations/**"
 
 
 	};

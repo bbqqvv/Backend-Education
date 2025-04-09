@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.bbqqvv.backendeducation.dto.ApiResponse;
 import org.bbqqvv.backendeducation.dto.request.ChangePasswordRequest;
 import org.bbqqvv.backendeducation.dto.request.UpdateProfileRequest;
-import org.bbqqvv.backendeducation.dto.request.UserCreationRequest;
 import org.bbqqvv.backendeducation.dto.response.UserResponse;
 import org.bbqqvv.backendeducation.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/users")
@@ -23,13 +23,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
-        return ApiResponse.<UserResponse>builder()
-                .data(userService.createUser(request))
-                .build();
-    }
 
     @PutMapping("/change-password")
     public ApiResponse<String> changePassword(@RequestBody @Valid ChangePasswordRequest request,
@@ -72,11 +65,12 @@ public class UserController {
                 .data("User has been deleted")
                 .build();
     }
-
     @GetMapping("/classmates")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse<List<UserResponse>> getClassmates(@AuthenticationPrincipal UserDetails userDetails) {
         return ApiResponse.<List<UserResponse>>builder()
+                .success(true)
+                .message("Lấy danh sách bạn cùng lớp thành công")
                 .data(userService.getClassmates(userDetails.getUsername()))
                 .build();
     }
@@ -86,7 +80,32 @@ public class UserController {
     public ApiResponse<List<UserResponse>> getTeachersForMyClass(@AuthenticationPrincipal UserDetails userDetails) {
         String className = userService.getUserByEmailEntity(userDetails.getUsername()).getStudentClass();
         return ApiResponse.<List<UserResponse>>builder()
+                .success(true)
+                .message("Lấy danh sách giáo viên của lớp thành công")
                 .data(userService.getTeachersForClass(className))
                 .build();
     }
+    @GetMapping("/my-classes")
+    @PreAuthorize("hasRole('TEACHER')")
+    public ApiResponse<Set<String>> getMyClasses(@AuthenticationPrincipal UserDetails userDetails) {
+        String teacherEmail = userDetails.getUsername();
+        return ApiResponse.<Set<String>>builder()
+                .success(true)
+                .message("Lấy danh sách lớp đang dạy thành công")
+                .data(userService.getClassesTaughtByTeacher(teacherEmail))
+                .build();
+    }
+
+    @GetMapping("/class/{className}/students")
+    @PreAuthorize("hasRole('TEACHER')")
+    public ApiResponse<List<UserResponse>> getStudentsInClass(@PathVariable String className,
+                                                              @AuthenticationPrincipal UserDetails userDetails) {
+        String teacherEmail = userDetails.getUsername();
+        return ApiResponse.<List<UserResponse>>builder()
+                .success(true)
+                .message("Lấy danh sách học sinh thành công")
+                .data(userService.getStudentsForTeacherClass(teacherEmail, className))
+                .build();
+    }
+
 }

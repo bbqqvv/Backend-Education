@@ -2,6 +2,8 @@ package org.bbqqvv.backendeducation.dto.request;
 
 import lombok.*;
 
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,5 +14,6 @@ public class UserCreationRequest {
     private String password;
     private String studentCode;
     private String studentClass;
+    private Set<String> teachingClasses;
     private String role;
 }

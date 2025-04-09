@@ -8,7 +8,7 @@ import org.bbqqvv.backendeducation.entity.LeaveStatus;
 @Data
 public class UpdateLeaveStatusRequest {
     @NotNull
-    private LeaveStatus status; // APPROVED hoặc REJECTED
+    private LeaveStatus status;
 
-    private String rejectionReason; // chỉ required khi REJECTED
+    private String rejectionReason;
 }

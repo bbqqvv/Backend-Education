@@ -16,14 +16,14 @@ public class LeaveRequest {
     private String id;
 
     private String senderName;
-    private String recipient; // "HIỆU TRƯỞNG"
+    private String recipient;
     private String reason;
     private String className;
     private String imageFile;
     private LocalDate fromDate;
     private LocalDate toDate;
     private String rejectionReason;
-    private LeaveStatus status; // PENDING, APPROVED, REJECTED
+    private LeaveStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

@@ -8,6 +8,7 @@ import org.bbqqvv.backendeducation.dto.request.ChangePasswordRequest;
 import org.bbqqvv.backendeducation.dto.request.UpdateProfileRequest;
 import org.bbqqvv.backendeducation.dto.request.UserCreationRequest;
 import org.bbqqvv.backendeducation.dto.response.UserResponse;
+import org.bbqqvv.backendeducation.entity.Role;
 import org.bbqqvv.backendeducation.entity.User;
 import org.bbqqvv.backendeducation.entity.UserProfile;
 import org.bbqqvv.backendeducation.exception.AppException;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -122,8 +124,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponse> getTeachersForClass(String className) {
-        return List.of(); // To be implemented when timetable logic is available
+        List<User> teachers = userRepository.findAll().stream()
+                .filter(user -> user.getRoles() != null && user.getRoles().contains(Role.ROLE_TEACHER))
+                .filter(user -> className.equals(user.getStudentClass()))
+                .toList();
+
+        return teachers.stream()
+                .map(teacher -> {
+                    UserProfile profile = userProfileRepository.findByUserId(teacher.getId()).orElse(null);
+                    return userMapper.toUserResponse(teacher, profile);
+                })
+                .collect(Collectors.toList());
     }
+
+
 
     @Override
     public List<UserResponse> getAllUsers() {
@@ -147,4 +161,44 @@ public class UserServiceImpl implements UserService {
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+
+    @Override
+    public Set<String> getClassesTaughtByTeacher(String teacherEmail) {
+        User teacher = getUserByEmailEntity(teacherEmail);
+
+        if (teacher.getRoles() == null || !teacher.getRoles().contains(Role.ROLE_TEACHER)) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        Set<String> teachingClasses = teacher.getTeachingClasses(); // dùng Set
+        if (teachingClasses == null || teachingClasses.isEmpty()) {
+            return Set.of(); // Không dạy lớp nào
+        }
+
+        return teachingClasses;
+    }
+
+    @Override
+    public List<UserResponse> getStudentsForTeacherClass(String teacherEmail, String className) {
+        User teacher = getUserByEmailEntity(teacherEmail);
+
+        if (teacher.getRoles() == null || !teacher.getRoles().contains(Role.ROLE_TEACHER)) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        Set<String> teachingClasses = teacher.getTeachingClasses(); // dùng Set
+        if (teachingClasses == null || !teachingClasses.contains(className)) {
+            throw new AppException(ErrorCode.FORBIDDEN); // Không dạy lớp này
+        }
+
+        return userRepository.findByStudentClass(className).stream()
+                .filter(user -> user.getRoles() != null && user.getRoles().contains(Role.ROLE_STUDENT))
+                .map(student -> {
+                    UserProfile profile = userProfileRepository.findByUserId(student.getId()).orElse(null);
+                    return userMapper.toUserResponse(student, profile);
+                })
+                .collect(Collectors.toList());
+    }
+
+
 }
