@@ -45,7 +45,8 @@ public class SecurityConfig {
 			"/api/newsletters/**",
 			"/api/quotes/**",
 			"/api/leave-requests/**",
-			"/api/violations/**"
+			"/api/violations/**",
+			"/api/chatbot/**"
 
 
 	};
