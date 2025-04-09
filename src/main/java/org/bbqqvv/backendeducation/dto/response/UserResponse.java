@@ -16,6 +16,7 @@ public class UserResponse {
     private String studentCode;
     private String studentClass;
     private String role;
+    private UserProfileResponse profile;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

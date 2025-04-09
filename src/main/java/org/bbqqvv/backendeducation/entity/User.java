@@ -34,6 +34,9 @@ public class User {
     @Field(name = "student_class")
     private String studentClass;
 
+    @Field("profile")
+    private UserProfile profile;
+
     @Field(name = "roles")
     private Set<Role> roles; // Role Enum, có thể là Set nếu muốn một người dùng có nhiều quyền
 

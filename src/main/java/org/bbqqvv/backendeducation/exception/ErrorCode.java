@@ -31,6 +31,9 @@ public enum ErrorCode {
     LEAVE_CANNOT_BE_DELETED(2006, "Leave can't be deleted", HttpStatus.BAD_REQUEST),
     SCHEDULE_CONFLICT(2007, "Schedule conflict", HttpStatus.CONFLICT),
     TIME_TABLE_NOT_FOUND(2008, "Time table not found", HttpStatus.NOT_FOUND),
+    EXAM_SCHEDULE_NOT_FOUND(2009, "Exam schedule not found", HttpStatus.NOT_FOUND),
+    TEACHER_SCHEDULE_CONFLICT(2010, "Teacher schedule conflict", HttpStatus.CONFLICT),
+    USER_PROFILE_NOT_FOUND(2011, "User profile not found", HttpStatus.NOT_FOUND),
     // 5000 Series - Account Errors
     ACCOUNT_DISABLED(5001, "Account is disabled", HttpStatus.FORBIDDEN),
     // 7000 Series - Validation Errors
