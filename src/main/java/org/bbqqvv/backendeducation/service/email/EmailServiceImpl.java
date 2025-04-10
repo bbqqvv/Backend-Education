@@ -26,10 +26,10 @@ public class EmailServiceImpl implements EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(content, true); // HTML mode
+            helper.setText(content, true); // HTML format
             mailSender.send(message);
         } catch (MessagingException e) {
-            throw new RuntimeException("Failed to send email", e);
+            throw new RuntimeException("Không thể gửi email", e);
         }
     }
 

@@ -139,6 +139,7 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
         model.put("fromDate", leave.getFromDate());
         model.put("toDate", leave.getToDate());
         model.put("reason", leave.getReason());
+        model.put("imageFile", leave.getImageFile());
         return model;
     }
 }
