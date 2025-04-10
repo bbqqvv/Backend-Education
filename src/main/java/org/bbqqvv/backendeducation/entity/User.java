@@ -33,6 +33,7 @@ public class User {
 
     @Field(name = "student_class")
     private String studentClass;
+
     @Field(name = "teaching_classes")
     private Set<String> teachingClasses; // Dành cho giáo viên, lưu danh sách lớp đang dạy
 

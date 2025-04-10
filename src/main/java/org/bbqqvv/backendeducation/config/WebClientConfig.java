@@ -9,7 +9,7 @@ public class WebClientConfig {
     @Bean
     public WebClient webClient() {
         return WebClient.builder()
-                .baseUrl("https://generativelanguage.googleapis.com/v1beta")  // ✅ Đúng
+                .baseUrl("https://generativelanguage.googleapis.com/v1beta")
                 .build();
     }
 }
