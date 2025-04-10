@@ -2,26 +2,124 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thông báo nghỉ dạy</title>
     <style>
-        body { font-family: 'Arial', sans-serif; color: #333; }
-        .container { padding: 20px; }
-        .highlight { font-weight: bold; }
-        .footer { margin-top: 30px; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            padding: 0;
+            margin: 0;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid #4a89dc;
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        h2:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #4a89dc;
+            border-radius: 3px;
+        }
+        .highlight {
+            font-weight: 600;
+            color: #4a89dc;
+            background-color: #f0f4f8;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        em {
+            color: #e74c3c;
+            font-style: normal;
+            font-weight: 500;
+            background-color: #fef2f2;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eaeaea;
+            text-align: right;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .image {
+            margin: 25px 0;
+            text-align: center;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #ddd;
+        }
+        .image img {
+            max-width: 100%;
+            border-radius: 6px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        .image p {
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #555;
+        }
+        .info-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #4a89dc;
+        }
+        .info-box p {
+            margin: 5px 0;
+        }
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 24px;
+            color: #4a89dc;
+            margin-top: 5px;
+        }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="container">
-    <p>Kính gửi phụ huynh và học sinh lớp <span class="highlight" th:text="${className}">10A1</span>,</p>
+    <h2>THÔNG BÁO NGHỈ DẠY</h2>
 
-    <p>Giáo viên <span class="highlight" th:text="${teacherName}">Nguyễn Văn A</span> xin nghỉ từ
-        <span class="highlight" th:text="${fromDate}">2024-04-01</span> đến
-        <span class="highlight" th:text="${toDate}">2024-04-03</span>.</p>
+    <p>Kính gửi quý phụ huynh và các em học sinh lớp <span class="highlight" th:text="${className}">10A1</span>,</p>
 
-    <p>Lý do: <em th:text="${reason}">Bận việc cá nhân</em></p>
+    <div class="info-box">
+        <p>Giáo viên: <span class="highlight" th:text="${teacherName}">Nguyễn Văn A</span></p>
+        <p>Thời gian nghỉ: Từ ngày <span class="highlight" th:text="${fromDate}">2024-04-01</span>
+            đến ngày <span class="highlight" th:text="${toDate}">2024-04-03</span></p>
+        <p>Lý do: <em th:text="${reason}">Bận việc cá nhân</em></p>
+    </div>
+
+    <p>Trong thời gian này, lớp học sẽ được bố trí giáo viên thay thế hoặc lịch học bù. Quý phụ huynh vui lòng theo dõi thông báo tiếp theo từ nhà trường.</p>
+
 
     <div class="footer">
-        <p>Trân trọng,<br>Nhà trường</p>
+        <p>Trân trọng,</p>
+        <div class="signature">Nhà trường</div>
     </div>
 </div>
 </body>
