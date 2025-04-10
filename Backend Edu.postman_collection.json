@@ -1,0 +1,1169 @@
+{
+	"info": {
+		"_postman_id": "d218e2d4-abc2-41cd-8795-e409eed12e67",
+		"name": "Backend Edu",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34319573"
+	},
+	"item": [
+		{
+			"name": "Project React Native",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Register User",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fullName\": \"Bùi Quốc Văn\",\r\n  \"email\": \"namdp.22itb@vku.udn.vn\",\r\n  \"studentCode\": \"22IT.B250\",\r\n  \"studentClass\": \"12A3\",\r\n  \"role\": \"ROLE_STUDENT\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/auth/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login User",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"id\", 1);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"vanbq.22itb@vku.udn.vn\",\r\n  \"password\": \"c705a4aa\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/auth/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"auth",
+										"login"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ForgotPassword",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": " {\r\n     \"email\" : \"vanbq.22itb@vku.udn.vn\"\r\n }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/auth/forgot-password",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"auth",
+										"forgot-password"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify OTP",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"vanbq.22itb@vku.udn.vn\",\r\n  \"otp\": \"310753\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/auth/verify-otp",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"auth",
+										"verify-otp"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Change Password",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"vanbq.22itb@vku.udn.vn\",\r\n  \"newPassword\": \"123123\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/auth/reset-password",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"auth",
+										"reset-password"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Newsletter",
+					"item": [
+						{
+							"name": "Add or Update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2YW5icS4yMml0YkB2a3UudWRuLnZuIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NDQxMjIxNDksImV4cCI6MTc0NDIwODU0OX0.KkDGJIkM_keekNW5Bu-Hk0jjeokyCRlKMJVU2xET2Ak",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Bản tin học Spring Boot",
+											"type": "text"
+										},
+										{
+											"key": "excerpt",
+											"value": "Một bài viết hữu ích về Spring Boot",
+											"type": "text"
+										},
+										{
+											"key": "content",
+											"value": "<p>Chi tiết nội dung HTML...</p>",
+											"type": "text"
+										},
+										{
+											"key": "category",
+											"value": "programming",
+											"type": "text"
+										},
+										{
+											"key": "tags",
+											"value": "java,spring,backend",
+											"type": "text"
+										},
+										{
+											"key": "thumbnailUrl",
+											"type": "file",
+											"src": "/C:/Users/vanbu/OneDrive/Máy tính/ImagesRowway/Áo thun/Áo giữ nhiệt ROWAY chất liệu cotton bông  Giữ nhiệt/vn-11134207-7ras8-m20rzfqcctemec.webp"
+										},
+										{
+											"key": "contentImages[]",
+											"type": "file",
+											"src": [
+												"/C:/Users/vanbu/OneDrive/Máy tính/ImagesRowway/Áo thun/Áo giữ nhiệt ROWAY chất liệu cotton bông  Giữ nhiệt/vn-11134207-7ras8-m20rzfoydfvfe0.webp",
+												"/C:/Users/vanbu/OneDrive/Máy tính/ImagesRowway/Áo thun/Áo giữ nhiệt ROWAY chất liệu cotton bông  Giữ nhiệt/vn-11134207-7ras8-m20rzfoydfxa59.webp",
+												"/C:/Users/vanbu/OneDrive/Máy tính/ImagesRowway/Áo thun/Áo giữ nhiệt ROWAY chất liệu cotton bông  Giữ nhiệt/vn-11134207-7ras8-m20rzfqcbesb3e.webp"
+											]
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/newsletters/add-or-update",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"newsletters",
+										"add-or-update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all newsletter",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/newsletters",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"newsletters"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Like newsletter",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2YW5icS4yMml0YkB2a3UudWRuLnZuIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NDQxMjIxNDksImV4cCI6MTc0NDIwODU0OX0.KkDGJIkM_keekNW5Bu-Hk0jjeokyCRlKMJVU2xET2Ak",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/newsletters/67f534b756ab5f7e1f49b148/like",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"newsletters",
+										"67f534b756ab5f7e1f49b148",
+										"like"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete newsletter",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/newsletters/remove/67f534b756ab5f7e1f49b148",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"newsletters",
+										"remove",
+										"67f534b756ab5f7e1f49b148"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get newsletter by category",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/newsletters/category/programming",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"newsletters",
+										"category",
+										"programming"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Violation",
+					"item": [
+						{
+							"name": "Add violation",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2YW5idWkwOTY2NDY3MzU2QGdtYWlsLmNvbSIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzQ0MTI5MDE3LCJleHAiOjE3NDQyMTU0MTd9.Nl-SDhfUdFK6oPROzia9Sb3hyzL3hM18sPC0b4WXLU0",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"studentCode\": \"22IT.B238\",\r\n  \"role\": \"STUDENT\",\r\n  \"description\": \"Đi học muộn\",\r\n  \"level\": \"SEVERE\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/violations",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"violations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get list violation",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/violations?page=0&size=10",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"violations"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Detail violation",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/violations/6523ad0c6f123abf9278ff01",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"violations",
+										"6523ad0c6f123abf9278ff01"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update violation",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/violations/6523ad0c6f123abf9278ff01",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"violations",
+										"6523ad0c6f123abf9278ff01"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete violation",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/violations/6523ad0c6f123abf9278ff01",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"violations",
+										"6523ad0c6f123abf9278ff01"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get violation current user",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/violations/me",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"violations",
+										"me"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Quote",
+					"item": [
+						{
+							"name": "Add Quote",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"content\": \"Mục đích của giáo dục không phải là dạy cách kiếm sống, mà là dạy cách sống\",\r\n  \"author\": \"Aristotle\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/quotes/add-or-update",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"quotes",
+										"add-or-update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Random quote",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/quotes/random",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"quotes",
+										"random"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "LeaveRequest",
+					"item": [
+						{
+							"name": "Create Form LeaveRequest",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2YW5idWkwOTY2NDY3MzU2QGdtYWlsLmNvbSIsInJvbGVzIjpbIlJPTEVfVEVBQ0hFUiJdLCJpYXQiOjE3NDQxODQ5MTAsImV4cCI6MTc0NDI3MTMxMH0.tfobTdisLasAxRVuq-nsIZqwRTtQlb6d4XSkLZu6aHs",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "senderName",
+											"value": "Nguyễn Văn A",
+											"type": "text"
+										},
+										{
+											"key": "recipient",
+											"value": "Ban giám hiệu",
+											"type": "text"
+										},
+										{
+											"key": "reason",
+											"value": "Tôi bị ốm",
+											"type": "text"
+										},
+										{
+											"key": "className",
+											"value": "Lớp 12A1",
+											"type": "text"
+										},
+										{
+											"key": "fromDate",
+											"value": "2025-04-10",
+											"type": "text"
+										},
+										{
+											"key": "toDate",
+											"value": "2025-04-11",
+											"type": "text"
+										},
+										{
+											"key": "imageFile",
+											"type": "file",
+											"src": "/C:/Users/vanbu/OneDrive/Máy tính/ImagesRowway/Áo thun/Áo giữ nhiệt ROWAY chất liệu cotton bông  Giữ nhiệt/vn-11134207-7ras8-m20rzfoydfxa59.webp"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/leave-requests",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"leave-requests"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update status",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2YW5icS4yMml0YkB2a3UudWRuLnZuIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NDQyMTU5NTEsImV4cCI6MTc0NDMwMjM1MX0.CizmNZqnaYGc_4LcjoPNgIhydWqrPTc4XtxWIV0Hs0k",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n      \"status\": \"APPROVED\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/leave-requests/67f69f5c2dd11a1ffaa186c4/status",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"leave-requests",
+										"67f69f5c2dd11a1ffaa186c4",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all list leave request",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2YW5icS4yMml0YkB2a3UudWRuLnZuIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NDQxODYyNTEsImV4cCI6MTc0NDI3MjY1MX0.iTwfW1QA-Hj_a43QH72_wCJm2lKsLeEplbMx7a-qBeY",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/leave-requests",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"leave-requests"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete leave request",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2YW5icS4yMml0YkB2a3UudWRuLnZuIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NDQxODYyNTEsImV4cCI6MTc0NDI3MjY1MX0.iTwfW1QA-Hj_a43QH72_wCJm2lKsLeEplbMx7a-qBeY",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/leave-requests/{id}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"leave-requests",
+										"{id}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get current leave request",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/leave-requests/my",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"leave-requests",
+										"my"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Exam schedule API",
+					"item": [
+						{
+							"name": "Create Exam Schedule",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <admin_token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"subject\": \"To\\u00e1n h\\u1ecdc\",\n    \"examDate\": \"2025-04-20\",\n    \"className\": \"12A1\",\n    \"startTime\": \"08:00\",\n    \"endTime\": \"10:00\",\n    \"examRoom\": \"Ph\\u00f2ng 201\",\n    \"teacherName\": \"Nguy\\u1ec5n V\\u0103n A\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/exams",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"exams"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Exam Schedule",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2YW5icS4yMml0YkB2a3UudWRuLnZuIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NDQyMTQ0NjAsImV4cCI6MTc0NDMwMDg2MH0.vkKJhiftN9oUTo1vIdhlyY_vqfKbi359rfpQQqTdIo8",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <admin_token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"subject\": \"To\\u00e1n h\\u1ecdc - S\\u1eeda\",\n    \"examDate\": \"2025-04-20\",\n    \"className\": \"12A1\",\n    \"startTime\": \"09:00\",\n    \"endTime\": \"11:00\",\n    \"examRoom\": \"Ph\\u00f2ng 202\",\n    \"teacherName\": \"Nguy\\u1ec5n V\\u0103n B\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/exams/{{examId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"exams",
+										"{{examId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Exam Schedule by Class",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <admin_token>"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/api/exams/class/12A1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"exams",
+										"class",
+										"12A1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get My Exam Schedule",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2YW5icS4yMjRpdGJAdnhrdS51ZG4udm4iLCJyb2xlcyI6WyJST0xFX1NUVURFTlQiXSwiaWF0IjoxNzQ0MjE0NzE3LCJleHAiOjE3NDQzMDExMTd9.eNaJzrpy37Z4BgNdNrhN-MKDdV0cwzAvHXGObCUbtW0",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <teacher_or_student_token>"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/api/exams/my",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"exams",
+										"my"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Exam Schedule",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <admin_token>"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/api/exams/{{examId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"exams",
+										"{{examId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User API",
+					"item": [
+						{
+							"name": "Update Profile",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <student_or_teacher_token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"address\": \"123 Street\",\n    \"phoneNumber\": \"0909123456\",\n    \"dateOfBirth\": \"2005-09-01\",\n    \"gender\": \"Nam\",\n    \"fatherName\": \"Nguy\\u1ec5n V\\u0103n B\",\n    \"motherName\": \"Tr\\u1ea7n Th\\u1ecb C\",\n    \"fatherPhoneNumber\": \"0909123457\",\n    \"motherPhoneNumber\": \"0909123458\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/users/profile",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"users",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Users",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <admin_token>"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/api/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User by ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/users/{{userId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"users",
+										"{{userId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Classmates",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <student_token>"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/api/users/classmates",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"users",
+										"classmates"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete User",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <admin_token>"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/api/users/{{userId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"users",
+										"{{userId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Change Password",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer <user_token>"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"oldPassword\": \"123456\",\n    \"newPassword\": \"newpass123\",\n    \"confirmPassword\": \"newpass123\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/users/change-password",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"users",
+										"change-password"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "AI API",
+					"item": [
+						{
+							"name": "AI Chat Bot",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2YW5icS4yMml0YkB2a3UudWRuLnZuIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NDQyNjk5NDIsImV4cCI6MTc0NDM1NjM0Mn0.9rd5jMEcJxx4_uOTPSYEotTqDqokCtLpLFVdaO7zVxs",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"message\": \"Đếm số học sinh trong lớp 12A3\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/chatbot/ask",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"chatbot",
+										"ask"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
