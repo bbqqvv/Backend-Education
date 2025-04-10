@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: Education
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: edu
+      auto-index-creation: true
+  mail:
+    host: ${MAIL_HOST}
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    cache: false
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+server:
+  port: 8080
+
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}
+      expiration: 86400000
+  cloudinary:
+    cloud-name: ${CLOUDINARY_CLOUD_NAME}
+    api-key: ${CLOUDINARY_API_KEY}
+    api-secret: ${CLOUDINARY_API_SECRET}
+
+gemini:
+  api:
+    key: ${GEMINI_API_KEY}
