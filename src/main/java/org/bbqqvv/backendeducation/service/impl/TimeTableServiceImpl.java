@@ -3,7 +3,9 @@ package org.bbqqvv.backendeducation.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.bbqqvv.backendeducation.config.jwt.SecurityUtils;
 import org.bbqqvv.backendeducation.dto.request.TimeTableRequest;
+import org.bbqqvv.backendeducation.dto.response.DailyScheduleResponse;
 import org.bbqqvv.backendeducation.dto.response.TimeTableResponse;
+import org.bbqqvv.backendeducation.dto.response.WeeklyScheduleResponse;
 import org.bbqqvv.backendeducation.entity.Role;
 import org.bbqqvv.backendeducation.entity.TimeTable;
 import org.bbqqvv.backendeducation.entity.User;
@@ -15,8 +17,10 @@ import org.bbqqvv.backendeducation.repository.UserRepository;
 import org.bbqqvv.backendeducation.service.TimeTableService;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,15 +33,22 @@ public class TimeTableServiceImpl implements TimeTableService {
 
     @Override
     public TimeTableResponse create(TimeTableRequest request) {
-        validateNoConflict(request);
+        // Kiểm tra trùng tiết
+        List<TimeTable> existing = timeTableRepository.findByClassNameAndDayOfWeek(
+                request.getClassName(), request.getDayOfWeek());
+
+        for (TimeTable item : existing) {
+            if (Objects.equals(item.getPeriod(), request.getPeriod())) {
+                throw new AppException(ErrorCode.SCHEDULE_CONFLICT);
+            }
+        }
 
         TimeTable newEntry = TimeTable.builder()
                 .className(request.getClassName())
                 .subject(request.getSubject())
                 .teacherName(request.getTeacherName())
                 .dayOfWeek(request.getDayOfWeek())
-                .startTime(request.getStartTime())
-                .endTime(request.getEndTime())
+                .period(request.getPeriod())
                 .build();
 
         return timeTableMapper.toTimeTableResponse(timeTableRepository.save(newEntry));
@@ -52,9 +63,7 @@ public class TimeTableServiceImpl implements TimeTableService {
                 request.getClassName(), request.getDayOfWeek());
 
         for (TimeTable item : schedules) {
-            if (!item.getId().equals(id) &&
-                    isTimeOverlap(item.getStartTime(), item.getEndTime(),
-                            request.getStartTime(), request.getEndTime())) {
+            if (!item.getId().equals(id) && Objects.equals(item.getPeriod(), request.getPeriod())) {
                 throw new AppException(ErrorCode.SCHEDULE_CONFLICT);
             }
         }
@@ -64,12 +73,43 @@ public class TimeTableServiceImpl implements TimeTableService {
                 .subject(request.getSubject())
                 .teacherName(request.getTeacherName())
                 .dayOfWeek(request.getDayOfWeek())
-                .startTime(request.getStartTime())
-                .endTime(request.getEndTime())
+                .period(request.getPeriod())
                 .build();
 
         return timeTableMapper.toTimeTableResponse(timeTableRepository.save(existing));
     }
+
+    @Override
+    public WeeklyScheduleResponse getWeeklySchedule(String className, LocalDate weekStartDate) {
+        List<TimeTable> all = timeTableRepository.findByClassName(className);
+
+        Map<String, List<TimeTable>> byDay = all.stream()
+                .collect(Collectors.groupingBy(TimeTable::getDayOfWeek));
+
+        List<DailyScheduleResponse> schedule = new ArrayList<>();
+
+        for (int i = 0; i < 7; i++) {
+            LocalDate currentDate = weekStartDate.plusDays(i);
+            String dayOfWeekDisplay = "THU " + (i + 1);
+            String javaDayName = currentDate.getDayOfWeek().name(); // "MONDAY"...
+
+            List<TimeTableResponse> lessons = byDay.getOrDefault(javaDayName, List.of())
+                    .stream()
+                    .map(t -> new TimeTableResponse(
+                            t.getId(),
+                            t.getSubject(),
+                            t.getTeacherName(),
+                            t.getDayOfWeek(),
+                            t.getPeriod()
+                    ))
+                    .collect(Collectors.toList());
+
+            schedule.add(new DailyScheduleResponse(dayOfWeekDisplay, currentDate, lessons));
+        }
+
+        return new WeeklyScheduleResponse(className, weekStartDate, schedule);
+    }
+
 
     @Override
     public List<TimeTableResponse> getByClassName(String className) {
@@ -99,19 +139,7 @@ public class TimeTableServiceImpl implements TimeTableService {
         timeTableRepository.delete(timetable);
     }
 
-    // ================= PRIVATE METHODS =================
-
-    private void validateNoConflict(TimeTableRequest request) {
-        List<TimeTable> existing = timeTableRepository.findByClassNameAndDayOfWeek(
-                request.getClassName(), request.getDayOfWeek());
-
-        for (TimeTable item : existing) {
-            if (isTimeOverlap(item.getStartTime(), item.getEndTime(),
-                    request.getStartTime(), request.getEndTime())) {
-                throw new AppException(ErrorCode.SCHEDULE_CONFLICT);
-            }
-        }
-    }
+    // ============ PRIVATE METHODS ============
 
     private boolean isTimeOverlap(LocalTime start1, LocalTime end1, LocalTime start2, LocalTime end2) {
         return start1.isBefore(end2) && start2.isBefore(end1);

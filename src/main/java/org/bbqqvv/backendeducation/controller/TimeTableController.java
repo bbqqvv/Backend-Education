@@ -5,10 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.bbqqvv.backendeducation.dto.ApiResponse;
 import org.bbqqvv.backendeducation.dto.request.TimeTableRequest;
 import org.bbqqvv.backendeducation.dto.response.TimeTableResponse;
+import org.bbqqvv.backendeducation.dto.response.WeeklyScheduleResponse;
 import org.bbqqvv.backendeducation.service.TimeTableService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -67,6 +70,18 @@ public class TimeTableController {
                 .success(true)
                 .message("Cập nhật thời khóa biểu thành công")
                 .data(timeTableService.update(id, request))
+                .build();
+    }
+    @GetMapping("/class/{className}/weekly")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
+    public ApiResponse<WeeklyScheduleResponse> getWeeklySchedule(
+            @PathVariable String className,
+            @RequestParam("weekStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate weekStartDate
+    ) {
+        return ApiResponse.<WeeklyScheduleResponse>builder()
+                .success(true)
+                .message("Lịch học trong tuần của lớp " + className)
+                .data(timeTableService.getWeeklySchedule(className, weekStartDate))
                 .build();
     }
 

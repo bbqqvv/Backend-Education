@@ -19,6 +19,5 @@ public class TimeTable {
     private String subject;
     private String teacherName;
     private String dayOfWeek;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private Integer period;
 }
