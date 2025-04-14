@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
+
 public final class SecurityUtils {
 	private SecurityUtils() {}
 

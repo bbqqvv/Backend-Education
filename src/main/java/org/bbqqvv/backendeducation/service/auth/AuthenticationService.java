@@ -52,6 +52,7 @@ public class AuthenticationService {
                 .password(encodedPassword)
                 .studentCode(registerUserDto.getStudentCode())
                 .studentClass(registerUserDto.getStudentClass())
+                .teachingClasses(registerUserDto.getTeachingClasses())
                 .role(registerUserDto.getRole())
                 .build();
 

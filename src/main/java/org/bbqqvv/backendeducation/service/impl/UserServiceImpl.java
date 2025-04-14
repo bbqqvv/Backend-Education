@@ -40,8 +40,9 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new AppException(ErrorCode.EMAIL_EXISTED);
         }
-
+        log.info("===> Request body: {}", request); // cần toString trong UserCreationRequest
         User user = userMapper.toUser(request);
+        log.info("===> Mapped user: {}", user); // cần toString trong User
         user.onCreate();
         User savedUser = userRepository.save(user);
 
