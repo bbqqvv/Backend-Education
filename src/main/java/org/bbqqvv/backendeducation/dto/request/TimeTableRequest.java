@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.bbqqvv.backendeducation.entity.DayOfWeekEnum;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,6 +14,6 @@ public class TimeTableRequest {
     private String className;
     private String subject;
     private String teacherName;
-    private String dayOfWeek;
+    private DayOfWeekEnum dayOfWeek;
     private Integer period;
 }

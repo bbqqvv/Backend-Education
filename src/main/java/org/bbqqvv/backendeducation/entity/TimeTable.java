@@ -18,6 +18,6 @@ public class TimeTable {
     private String className;
     private String subject;
     private String teacherName;
-    private String dayOfWeek;
+    private DayOfWeekEnum dayOfWeek;
     private Integer period;
 }

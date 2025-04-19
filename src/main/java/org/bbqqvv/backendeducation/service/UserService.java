@@ -12,7 +12,6 @@ import java.util.Set;
 
 public interface UserService {
     UserResponse createUser(UserCreationRequest request);
-    UserResponse getUserById(String id);
     UserResponse changePassword(String email, ChangePasswordRequest request);
     UserResponse updateUserProfile(String email, UpdateProfileRequest request);
     List<UserResponse> getAllUsers();
@@ -25,4 +24,6 @@ public interface UserService {
     Set<String> getClassesTaughtByTeacher(String teacherEmail); // Đổi từ List -> Set
 
     List<UserResponse> getStudentsForTeacherClass(String teacherEmail, String className);
+
+    UserResponse getCurrentUser(String username);
 }

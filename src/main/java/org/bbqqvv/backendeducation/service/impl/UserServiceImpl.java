@@ -54,16 +54,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserResponse(savedUser, profile);
     }
 
-    @Override
-    public UserResponse getUserById(String id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        UserProfile profile = userProfileRepository.findByUserId(user.getId())
-                .orElse(null);
-
-        return userMapper.toUserResponse(user, profile);
-    }
 
     @Override
     public UserResponse changePassword(String email, ChangePasswordRequest request) {
@@ -199,6 +190,17 @@ public class UserServiceImpl implements UserService {
                     return userMapper.toUserResponse(student, profile);
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserResponse getCurrentUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        UserProfile profile = userProfileRepository.findByUserId(user.getId())
+                .orElse(null);
+
+        return userMapper.toUserResponse(user, profile);
     }
 
 

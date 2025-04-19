@@ -43,12 +43,14 @@ public class ExamScheduleServiceImpl implements ExamScheduleService {
 
         validateNoConflict(request, id);
 
+        existing.setClassId(request.getClassId());
         existing.setClassName(request.getClassName());
         existing.setSubject(request.getSubject());
         existing.setExamDate(request.getExamDate());
         existing.setStartTime(request.getStartTime());
         existing.setEndTime(request.getEndTime());
         existing.setExamRoom(request.getExamRoom());
+        existing.setTeacherId(request.getTeacherId());
         existing.setTeacherName(request.getTeacherName());
 
         ExamSchedule saved = examScheduleRepository.save(existing);
@@ -67,17 +69,18 @@ public class ExamScheduleServiceImpl implements ExamScheduleService {
         User user = getAuthenticatedUser();
 
         if (user.getRoles().contains(Role.ROLE_STUDENT)) {
-            return examScheduleRepository.findByClassName(user.getStudentClass()).stream()
+            return examScheduleRepository.findByClassName(user.getStudentClass()).stream()  // Sử dụng studentClass
                     .map(examScheduleMapper::toExamScheduleResponse)
                     .collect(Collectors.toList());
         } else if (user.getRoles().contains(Role.ROLE_TEACHER)) {
-            return examScheduleRepository.findByTeacherName(user.getFullName()).stream()
+            return examScheduleRepository.findByTeacherId(user.getId()).stream()
                     .map(examScheduleMapper::toExamScheduleResponse)
                     .collect(Collectors.toList());
         }
 
         throw new AppException(ErrorCode.UNAUTHORIZED);
     }
+
 
     @Override
     public List<ExamScheduleResponse> getByClassName(String className) {
@@ -89,9 +92,9 @@ public class ExamScheduleServiceImpl implements ExamScheduleService {
     // ================= PRIVATE =================
 
     private void validateNoConflict(ExamScheduleRequest request, String excludeId) {
-        // 1. Trùng lịch thi học sinh
+        // Trùng lịch thi học sinh (theo studentClass)
         List<ExamSchedule> sameClassExams = examScheduleRepository.findByClassNameAndExamDate(
-                request.getClassName(), request.getExamDate());
+                request.getClassName(), request.getExamDate()); // Sử dụng className thay vì classId
 
         for (ExamSchedule exam : sameClassExams) {
             if (!exam.getId().equals(excludeId) &&
@@ -101,9 +104,9 @@ public class ExamScheduleServiceImpl implements ExamScheduleService {
             }
         }
 
-        // 2. Trùng lịch coi thi giáo viên
-        List<ExamSchedule> sameTeacherExams = examScheduleRepository.findByTeacherNameAndExamDate(
-                request.getTeacherName(), request.getExamDate());
+        // Trùng lịch coi thi giáo viên (theo teacherId)
+        List<ExamSchedule> sameTeacherExams = examScheduleRepository.findByTeacherIdAndExamDate(
+                request.getTeacherId(), request.getExamDate());
 
         for (ExamSchedule exam : sameTeacherExams) {
             if (!exam.getId().equals(excludeId) &&

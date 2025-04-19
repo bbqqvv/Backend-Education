@@ -28,20 +28,20 @@ public class User {
     @Field(name = "full_name")
     private String fullName;
 
-    @Field(name = "student_code")
-    private String studentCode;
+    @Field(name = "user_code")
+    private String userCode;
 
     @Field(name = "student_class")
-    private String studentClass;
+    private String studentClass; // Học sinh dùng
 
     @Field(name = "teaching_classes")
-    private Set<String> teachingClasses; // Dành cho giáo viên, lưu danh sách lớp đang dạy
+    private Set<String> teachingClasses; // Giáo viên dùng
 
-    @Field("profile")
+    @Field(name = "profile")
     private UserProfile profile;
 
     @Field(name = "roles")
-    private Set<Role> roles; // Role Enum, có thể là Set nếu muốn một người dùng có nhiều quyền
+    private Set<Role> roles;
 
     @Field(name = "created_at")
     private LocalDateTime createdAt;
@@ -49,17 +49,14 @@ public class User {
     @Field(name = "updated_at")
     private LocalDateTime updatedAt;
 
-
-    // Tạo tài khoản mặc định khi khởi tạo
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         if (this.roles == null || this.roles.isEmpty()) {
-            this.roles = Set.of(Role.ROLE_STUDENT); // Mặc định nếu chưa có giá trị, sẽ gán ROLE_STUDENT
+            this.roles = Set.of(Role.ROLE_STUDENT);
         }
     }
 
-    // Cập nhật tài khoản
     public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }

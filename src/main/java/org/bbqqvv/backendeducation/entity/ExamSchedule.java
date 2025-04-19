@@ -18,7 +18,9 @@ public class ExamSchedule {
     @Id
     private String id;
 
+    private String classId;
     private String className;
+
     private String subject;
 
     private LocalDate examDate;
@@ -27,5 +29,6 @@ public class ExamSchedule {
 
     private String examRoom;
 
-    private String teacherName; // Người coi thi
+    private String teacherId;
+    private String teacherName;
 }

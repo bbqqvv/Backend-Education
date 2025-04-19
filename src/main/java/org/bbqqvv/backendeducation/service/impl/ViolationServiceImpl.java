@@ -31,9 +31,6 @@ public class ViolationServiceImpl implements ViolationService {
     private final ViolationMapper violationMapper;
     private final UserRepository userRepository;
 
-    /**
-     * Lấy thông tin người dùng đang đăng nhập
-     */
     private User getAuthenticatedUser() {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHORIZED));
@@ -42,33 +39,24 @@ public class ViolationServiceImpl implements ViolationService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
 
-    /**
-     * Tìm vi phạm theo ID
-     */
     private Violation findViolationById(String id) {
         return violationRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.VIOLATION_NOT_FOUND));
     }
 
-    /**
-     * Chuyển đổi role từ User sang UserType enum
-     */
     private UserType getUserTypeFromRoles(User user) {
         return user.getRoles().stream()
                 .anyMatch(role -> "ROLE_STUDENT".equals(role.getAuthority())) ? UserType.STUDENT : UserType.TEACHER;
     }
 
-    /**
-     * Tạo vi phạm mới
-     */
     @Override
     @Transactional
     public ViolationResponse addViolation(ViolationRequest request) {
-        User violatedUser = userRepository.findByStudentCode(request.getStudentCode())
+        User violatedUser = userRepository.findByUserCode(request.getUserCode())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         Violation violation = Violation.builder()
-                .studentCode(violatedUser.getStudentCode())
+                .userCode(violatedUser.getUserCode())
                 .fullName(violatedUser.getFullName())
                 .role(getUserTypeFromRoles(violatedUser))
                 .description(request.getDescription())
@@ -77,70 +65,50 @@ public class ViolationServiceImpl implements ViolationService {
                 .createdBy(getAuthenticatedUser().getEmail())
                 .build();
 
-        Violation saved = violationRepository.save(violation);
-        return violationMapper.toViolationResponse(saved);
+        return violationMapper.toViolationResponse(violationRepository.save(violation));
     }
 
-    /**
-     * Cập nhật vi phạm
-     */
     @Override
     @Transactional
     public ViolationResponse updateViolation(String id, ViolationRequest request) {
-        User violatedUser = userRepository.findByStudentCode(request.getStudentCode())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
         Violation violation = findViolationById(id);
 
-        violation.setStudentCode(violatedUser.getStudentCode());
+        User violatedUser = userRepository.findByUserCode(request.getUserCode())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        violation.setUserCode(violatedUser.getUserCode());
         violation.setFullName(violatedUser.getFullName());
         violation.setRole(getUserTypeFromRoles(violatedUser));
         violation.setDescription(request.getDescription());
         violation.setLevel(request.getLevel());
         violation.setUpdatedAt(LocalDateTime.now());
 
-        Violation updated = violationRepository.save(violation);
-        return violationMapper.toViolationResponse(updated);
+        return violationMapper.toViolationResponse(violationRepository.save(violation));
     }
 
-    /**
-     * Xoá vi phạm
-     */
     @Override
     @Transactional
     public void deleteViolation(String id) {
-        Violation violation = findViolationById(id);
-        violationRepository.delete(violation);
+        violationRepository.delete(findViolationById(id));
     }
 
-    /**
-     * Lấy danh sách vi phạm của người dùng hiện tại
-     */
     @Override
     @Transactional(readOnly = true)
     public PageResponse<ViolationResponse> getCurrentUserViolations(Pageable pageable) {
-        User currentUser = getAuthenticatedUser();
-        Page<Violation> page = violationRepository.findByStudentCode(currentUser.getStudentCode(), pageable);
+        String userCode = getAuthenticatedUser().getUserCode();
+        Page<Violation> page = violationRepository.findByUserCode(userCode, pageable);
         return toPageResponse(page, violationMapper::toViolationResponse);
     }
 
-    /**
-     * Lấy chi tiết vi phạm theo ID
-     */
     @Override
     @Transactional(readOnly = true)
     public ViolationResponse getViolationById(String id) {
-        Violation violation = findViolationById(id);
-        return violationMapper.toViolationResponse(violation);
+        return violationMapper.toViolationResponse(findViolationById(id));
     }
 
-    /**
-     * Lấy danh sách tất cả vi phạm
-     */
     @Override
     @Transactional(readOnly = true)
     public PageResponse<ViolationResponse> getAllViolations(Pageable pageable) {
-        Page<Violation> page = violationRepository.findAll(pageable);
-        return toPageResponse(page, violationMapper::toViolationResponse);
+        return toPageResponse(violationRepository.findAll(pageable), violationMapper::toViolationResponse);
     }
 }

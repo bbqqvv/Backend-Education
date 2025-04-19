@@ -16,14 +16,11 @@ public class CloudinaryService {
     private final Cloudinary cloudinary;
 
     /**
-     * Upload ảnh (image/png, image/jpeg, ...)
+     * Upload một ảnh và trả về URL
      */
     public String uploadImage(MultipartFile file) {
         try {
-            Map<?, ?> uploadResult = cloudinary.uploader().upload(
-                    file.getBytes(),
-                    ObjectUtils.emptyMap()
-            );
+            Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
             return uploadResult.get("secure_url").toString();
         } catch (IOException e) {
             throw new RuntimeException("Image upload failed", e);
@@ -31,7 +28,7 @@ public class CloudinaryService {
     }
 
     /**
-     * Upload nhiều ảnh
+     * Upload nhiều ảnh và trả về danh sách URL
      */
     public List<String> uploadImages(List<MultipartFile> files) {
         List<String> urls = new ArrayList<>();
@@ -40,7 +37,6 @@ public class CloudinaryService {
         }
         return urls;
     }
-
     /**
      * Upload file bất kỳ (PDF, DOCX, ZIP...)
      */

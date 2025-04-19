@@ -12,7 +12,7 @@ public class UserCreationRequest {
     private String fullName;
     private String email;
     private String password;
-    private String studentCode;
+    private String userCode;
     private String studentClass;
     private Set<String> teachingClasses;
     private String role;

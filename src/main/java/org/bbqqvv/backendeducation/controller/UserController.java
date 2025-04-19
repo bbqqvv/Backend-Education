@@ -42,12 +42,6 @@ public class UserController {
                 .build();
     }
 
-    @GetMapping("/{id}")
-    public ApiResponse<UserResponse> getUserById(@PathVariable String id) {
-        return ApiResponse.<UserResponse>builder()
-                .data(userService.getUserById(id))
-                .build();
-    }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -56,6 +50,13 @@ public class UserController {
                 .data(userService.getAllUsers())
                 .build();
     }
+    @GetMapping("/current-user")
+    public ApiResponse<UserResponse> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        return ApiResponse.<UserResponse>builder()
+                .data(userService.getCurrentUser(userDetails.getUsername()))
+                .build();
+    }
+
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")

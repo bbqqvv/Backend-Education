@@ -12,7 +12,7 @@ import org.bbqqvv.backendeducation.entity.ViolationLevel;
 @AllArgsConstructor
 @Builder
 public class ViolationRequest {
-    private String studentCode;
+    private String userCode;
     private UserType role;
     private String description;
     private ViolationLevel level;

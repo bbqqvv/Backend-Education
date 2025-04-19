@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ViolationRepository extends MongoRepository<Violation, String> {
-    Page<Violation> findByStudentCode(String id, Pageable pageable);
+    Page<Violation> findByUserCode(String userCode, Pageable pageable);
 }

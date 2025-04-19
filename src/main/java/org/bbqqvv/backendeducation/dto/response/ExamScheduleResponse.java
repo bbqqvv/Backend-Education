@@ -10,11 +10,24 @@ import java.time.LocalTime;
 @Builder
 public class ExamScheduleResponse {
     private String id;
-    private String className;
+    private ClassInfo classInfo;
     private String subject;
     private LocalDate examDate;
     private LocalTime startTime;
     private LocalTime endTime;
     private String examRoom;
-    private String teacherName;
+    private TeacherInfo teacher;
+
+    @Data
+    @Builder
+    public static class ClassInfo {
+        private String name;
+    }
+
+    @Data
+    @Builder
+    public static class TeacherInfo {
+        private String id;
+        private String name;
+    }
 }

@@ -21,7 +21,7 @@ public enum ErrorCode {
     EMAIL_EXISTED(1008, "Email existed", HttpStatus.BAD_REQUEST),
     WRONG_PASSWORD(1009, "Wrong password", HttpStatus.BAD_REQUEST),
     FORBIDDEN(1010, "Forbidden", HttpStatus.FORBIDDEN),
-
+    NOT_FOUND(1011,"Not Found", HttpStatus.NOT_FOUND),
     // 2000 - CRUD
     NEWSLETTER_NOT_FOUND(2000, "Newsletter not found", HttpStatus.NOT_FOUND),
     IMAGE_UPLOAD_FAILED(2001, "Image upload failed", HttpStatus.INTERNAL_SERVER_ERROR),

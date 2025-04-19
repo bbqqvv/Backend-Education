@@ -32,12 +32,15 @@ server:
 application:
   security:
     jwt:
-      secret-key: ${JWT_SECRET_KEY}
+      secret-key: V0qfFwSH4RKrjG7F60Mm5NklyLTy2DsdDhRU03G2A1s=
       expiration: 86400000
   cloudinary:
-    cloud-name: ${CLOUDINARY_CLOUD_NAME}
-    api-key: ${CLOUDINARY_API_KEY}
-    api-secret: ${CLOUDINARY_API_SECRET}
+    cloud-name: do7dou7cw
+    api-key: 243248931365582
+    api-secret: JQ9u5aR6bcYJhd_GHz8F3PLMXFU
+#    cloud-name: ${CLOUDINARY_CLOUD_NAME}
+#    api-key: ${CLOUDINARY_API_KEY}
+#    api-secret: ${CLOUDINARY_API_SECRET}
 
 gemini:
   api:

@@ -14,6 +14,4 @@ public class ChatRoomResponse {
     private String name;
     private String className;
     private List<MemberInfoResponse> members;
-
-
 }

@@ -18,6 +18,7 @@ import org.bbqqvv.backendeducation.service.ChatRoomService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,16 +34,22 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     public ChatRoomResponse create(ChatRoomRequest request) {
         User currentUser = getAuthenticatedUser();
 
+        // 🔐 Kiểm tra quyền giáo viên
         if (!currentUser.getRoles().contains(Role.ROLE_TEACHER)) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
+        // 📦 Tìm học sinh theo lớp
         List<User> students = userRepository.findAllByStudentClass(request.getClassName());
-        List<String> memberIds = students.stream().map(User::getId).toList();
+        if (students.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_FOUND);
+        }
 
-        // Add giáo viên vào nhóm
+        // 📌 Tạo danh sách memberIds (bao gồm giáo viên)
+        List<String> memberIds = new ArrayList<>(students.stream().map(User::getId).toList());
         memberIds.add(currentUser.getId());
 
+        // 🧱 Khởi tạo phòng chat
         ChatRoom room = ChatRoom.builder()
                 .name(request.getName())
                 .className(request.getClassName())
@@ -51,19 +58,23 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        ChatRoom saved = chatRoomRepository.save(room);
+        ChatRoom savedRoom = chatRoomRepository.save(room);
 
-        // Convert User -> MemberInfoResponse
-        List<MemberInfoResponse> memberInfo = students.stream()
+        // 👥 Lấy toàn bộ user info của members (gồm cả giáo viên)
+        List<User> allMembers = new ArrayList<>(students);
+        allMembers.add(currentUser);
+
+        List<MemberInfoResponse> memberInfo = allMembers.stream()
                 .map(userMapper::toMemberInfoResponse)
                 .toList();
 
-        return chatRoomMapper.toChatRoomResponse(saved, memberInfo);
+        return chatRoomMapper.toChatRoomResponse(savedRoom, memberInfo);
     }
 
     @Override
     public List<ChatRoomResponse> getMyChatRooms() {
         User currentUser = getAuthenticatedUser();
+
         List<ChatRoom> rooms = chatRoomRepository.findAllByMemberIdsContaining(currentUser.getId());
 
         return rooms.stream().map(room -> {

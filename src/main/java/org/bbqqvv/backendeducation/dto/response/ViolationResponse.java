@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 @Builder
 public class ViolationResponse {
     private String id;
-    private String studentCode;
+    private String userCode;
+    private String violationCode;
     private String fullName;
     private UserType role;
     private String description;
