@@ -19,8 +19,8 @@
 
         private final LeaveRequestService leaveRequestService;
 
+        @PreAuthorize("hasAnyRole('TEACHER', 'STUDENT')")
         @PostMapping
-        @PreAuthorize("hasRole('TEACHER')")
         public ApiResponse<LeaveRequestResponse> createLeaveRequest(@ModelAttribute @Valid LeaveRequestRequest request) {
             return ApiResponse.<LeaveRequestResponse>builder()
                     .success(true)
@@ -29,8 +29,9 @@
                     .build();
         }
 
+
         @PatchMapping("/{id}/status")
-        @PreAuthorize("hasRole('ADMIN')")
+        @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
         public ApiResponse<LeaveRequestResponse> updateStatus(
                 @PathVariable String id,
                 @RequestBody @Valid UpdateLeaveStatusRequest request
@@ -53,7 +54,7 @@
                     .build();
         }
         @DeleteMapping("/{id}")
-        @PreAuthorize("hasRole('TEACHER')")
+        @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
         public ApiResponse<Void> deleteLeaveRequest(@PathVariable String id) {
             leaveRequestService.deleteLeaveRequest(id);
             return ApiResponse.<Void>builder()
@@ -63,12 +64,12 @@
         }
 
         @GetMapping("/my")
-        @PreAuthorize("hasRole('TEACHER')")
+        @PreAuthorize("hasAnyRole('TEACHER', 'STUDENT')")
         public ApiResponse<List<LeaveRequestResponse>> getMyLeaveRequests() {
             return ApiResponse.<List<LeaveRequestResponse>>builder()
                     .success(true)
                     .message("Danh sách đơn báo nghỉ của giáo viên hiện tại")
-                    .data(leaveRequestService.getLeaveRequestsByCurrentTeacher())
+                    .data(leaveRequestService.getLeaveRequestsByCurrentUser())
                     .build();
         }
     }

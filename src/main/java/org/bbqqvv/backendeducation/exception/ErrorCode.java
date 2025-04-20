@@ -22,6 +22,11 @@ public enum ErrorCode {
     WRONG_PASSWORD(1009, "Wrong password", HttpStatus.BAD_REQUEST),
     FORBIDDEN(1010, "Forbidden", HttpStatus.FORBIDDEN),
     NOT_FOUND(1011,"Not Found", HttpStatus.NOT_FOUND),
+    INVALID_DATE_RANGE(1012, "Invalid date range", HttpStatus.BAD_REQUEST),
+    UNAUTHORIZED_ACTION(1013, "Unauthorized action", HttpStatus.UNAUTHORIZED),
+    INVALID_CLASS(1014, "Invalid class", HttpStatus.BAD_REQUEST),
+    LEAVE_ALREADY_PROCESSED(1015, "Leave already processed", HttpStatus.CONFLICT),
+    REJECTION_REASON_REQUIRED(1016, "Rejection reason required", HttpStatus.BAD_REQUEST),
     // 2000 - CRUD
     NEWSLETTER_NOT_FOUND(2000, "Newsletter not found", HttpStatus.NOT_FOUND),
     IMAGE_UPLOAD_FAILED(2001, "Image upload failed", HttpStatus.INTERNAL_SERVER_ERROR),

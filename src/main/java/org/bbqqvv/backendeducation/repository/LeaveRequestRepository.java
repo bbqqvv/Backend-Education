@@ -5,8 +5,11 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface LeaveRequestRepository extends MongoRepository<LeaveRequest, String> {
-    List<LeaveRequest> findBySenderName(String fullName);
+    List<LeaveRequest> findByClassNameIn(Set<String> classNames);
+    List<LeaveRequest> findBySenderName(String senderName);
+
 }

@@ -17,4 +17,6 @@ public interface UserRepository extends MongoRepository<User, String> {
 	Optional<User> findByStudentClass(String studentClass);
     List<User> findAllByStudentClass(String className);
 	Optional<User> findByUserCode(String userCode);
+
+	Optional<User> findByRolesAndTeachingClasses(Role role, String teachingClass);
 }
