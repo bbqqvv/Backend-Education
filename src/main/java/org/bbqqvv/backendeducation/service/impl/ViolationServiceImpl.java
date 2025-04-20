@@ -48,6 +48,9 @@ public class ViolationServiceImpl implements ViolationService {
         return user.getRoles().stream()
                 .anyMatch(role -> "ROLE_STUDENT".equals(role.getAuthority())) ? UserType.STUDENT : UserType.TEACHER;
     }
+    private String generateViolationCode() {
+        return "VL-" + java.util.UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
 
     @Override
     @Transactional
@@ -56,6 +59,7 @@ public class ViolationServiceImpl implements ViolationService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         Violation violation = Violation.builder()
+                .violationCode(generateViolationCode()) // <= Gán mã tự sinh
                 .userCode(violatedUser.getUserCode())
                 .fullName(violatedUser.getFullName())
                 .role(getUserTypeFromRoles(violatedUser))

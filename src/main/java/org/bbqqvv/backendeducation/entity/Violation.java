@@ -16,6 +16,7 @@ public class Violation {
     @Id
     private String id;
     private String userCode;
+    private String violationCode;
     private String fullName;
     private UserType role;
     private String description;
