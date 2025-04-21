@@ -9,6 +9,5 @@ import org.bbqqvv.backendeducation.entity.LeaveStatus;
 public class UpdateLeaveStatusRequest {
     @NotNull
     private LeaveStatus status;
-
     private String rejectionReason;
 }

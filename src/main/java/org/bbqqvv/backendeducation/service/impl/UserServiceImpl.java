@@ -116,11 +116,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponse> getTeachersForClass(String className) {
-        List<User> teachers = userRepository.findAll().stream()
-                .filter(user -> user.getRoles() != null && user.getRoles().contains(Role.ROLE_TEACHER))
-                .filter(user -> className.equals(user.getStudentClass()))
-                .toList();
-
+        List<User> teachers = userRepository.findByRolesAndTeachingClassesContaining(Role.ROLE_TEACHER, className);
         return teachers.stream()
                 .map(teacher -> {
                     UserProfile profile = userProfileRepository.findByUserId(teacher.getId()).orElse(null);
@@ -128,6 +124,7 @@ public class UserServiceImpl implements UserService {
                 })
                 .collect(Collectors.toList());
     }
+
 
 
 

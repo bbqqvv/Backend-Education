@@ -15,10 +15,8 @@ public class NewsletterRequest {
     private String title;
     private String content;
     private List<MultipartFile> contentImages;
-
     private String excerpt;
     private String category;
     private List<String> tags;
-
     private MultipartFile thumbnailUrl;
 }
