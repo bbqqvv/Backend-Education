@@ -1,4 +1,4 @@
-package org.bbqqvv.backendeducation.repository;
+package org.bbqqvv.backendeducation.repository.reactive;
 
 import org.bbqqvv.backendeducation.entity.User;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;

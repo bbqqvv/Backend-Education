@@ -2,17 +2,18 @@ package org.bbqqvv.backendeducation.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bbqqvv.backendeducation.dto.response.IntentResult;
-import org.bbqqvv.backendeducation.entity.User;
-import org.bbqqvv.backendeducation.repository.ReactiveUserRepository;
+import org.bbqqvv.backendeducation.intent.IntentHandler;
 import org.bbqqvv.backendeducation.service.ChatBotService;
-import org.bbqqvv.backendeducation.util.ResponseTemplateUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ChatBotServiceImpl implements ChatBotService {
@@ -21,163 +22,126 @@ public class ChatBotServiceImpl implements ChatBotService {
     private String apiKey;
 
     private final WebClient webClient;
-    private final ReactiveUserRepository reactiveUserRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final List<IntentHandler> intentHandlers;
 
-    public ChatBotServiceImpl(WebClient webClient, ReactiveUserRepository reactiveUserRepository) {
+    public ChatBotServiceImpl(WebClient webClient, List<IntentHandler> intentHandlers) {
         this.webClient = webClient;
-        this.reactiveUserRepository = reactiveUserRepository;
+        this.intentHandlers = intentHandlers;
     }
 
     @Override
     public Mono<String> generateReply(String prompt) {
         return analyzeIntent(prompt)
                 .flatMap(intentResult -> {
-                    switch (intentResult.getIntent()) {
-                        case "count_students_by_class":
-                            return reactiveUserRepository.countByStudentClass(intentResult.getClassName())
-                                    .map(count -> ResponseTemplateUtil.getCountStudentsByClass(intentResult.getClassName(), count));
-
-                        case "list_students_by_class":
-                            return reactiveUserRepository.findByStudentClass(intentResult.getClassName())
-                                    .collectList()
-                                    .map(users -> {
-                                        if (users.isEmpty()) return "Mình không tìm thấy học sinh nào trong lớp " + intentResult.getClassName();
-                                        String names = users.stream()
-                                                .map(User::getFullName)
-                                                .collect(Collectors.joining(", "));
-                                        return ResponseTemplateUtil.getListStudentsByClass(intentResult.getClassName(), names);
-                                    });
-
-                        case "count_teachers_by_class":
-                            return reactiveUserRepository.findByTeachingClassesContaining(intentResult.getClassName())
-                                    .count()
-                                    .map(count -> ResponseTemplateUtil.getCountTeachersByClass(intentResult.getClassName(), count));
-
-                        case "list_classes_of_teacher":
-                            return reactiveUserRepository.findByFullName(intentResult.getTeacherName())
-                                    .collectList()
-                                    .map(users -> {
-                                        if (users.isEmpty()) return "Mình không tìm thấy giáo viên nào tên " + intentResult.getTeacherName();
-                                        Set<String> classes = users.stream()
-                                                .flatMap(u -> u.getTeachingClasses().stream())
-                                                .collect(Collectors.toSet());
-                                        return ResponseTemplateUtil.getListClassesOfTeacher(intentResult.getTeacherName(), classes);
-                                    });
-
-                        case "introduce_school":
-                            return Mono.just(ResponseTemplateUtil.getRandomSchoolIntroduction());
-
-                        default:
-                            return callGemini(prompt);
+                    if (intentResult == null || intentResult.getIntent().equalsIgnoreCase("unknown")) {
+                        return callGemini(prompt); // fallback khi không rõ intent
                     }
+
+                    return intentHandlers.stream()
+                            .filter(handler -> handler.supports(intentResult.getIntent()))
+                            .findFirst()
+                            .map(handler -> handler.handle(intentResult))
+                            .orElse(callGemini(prompt));
                 })
                 .onErrorResume(e -> callGemini(prompt));
     }
 
     private Mono<IntentResult> analyzeIntent(String prompt) {
-        String systemPrompt = """
-        Hãy phân tích câu hỏi sau và trả về JSON theo đúng cấu trúc. Dưới đây là một số ví dụ:
+        return Mono.defer(() -> {
+            try {
+                String systemPrompt = getPromptFromFile().formatted(prompt);
+                Map<String, Object> requestBody = createRequestBody(systemPrompt);
 
-        - Đếm số học sinh trong lớp:
-          {
-            "intent": "count_students_by_class",
-            "className": "12A1"
-          }
+                return webClient.post()
+                        .uri("/models/gemini-2.0-flash:generateContent?key=" + apiKey)
+                        .bodyValue(requestBody)
+                        .retrieve()
+                        .bodyToMono(Map.class)
+                        .map(this::parseIntentResult);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return Mono.just(new IntentResult("unknown", null, null,null));
+            }
+        });
+    }
 
-        - Liệt kê học sinh của lớp:
-          {
-            "intent": "list_students_by_class",
-            "className": "11B2"
-          }
+    private String getPromptFromFile() throws IOException {
+        return new String(Files.readAllBytes(Paths.get("src/main/resources/prompt.txt")));
+    }
 
-        - Đếm số giáo viên dạy lớp:
-          {
-            "intent": "count_teachers_by_class",
-            "className": "10C3"
-          }
-
-        - Lấy danh sách lớp mà giáo viên đang dạy:
-          {
-            "intent": "list_classes_of_teacher",
-            "teacherName": "Nguyễn Văn A"
-          }
-
-        - Giới thiệu về trường:
-          {
-            "intent": "introduce_school"
-          }
-
-        Nếu không xác định được, trả về:
-        {
-          "intent": "unknown"
-        }
-
-        Câu hỏi: %s
-        """.formatted(prompt);
-
-        Map<String, Object> requestBody = Map.of(
+    private Map<String, Object> createRequestBody(String promptText) {
+        return Map.of(
                 "contents", List.of(
                         Map.of("parts", List.of(
-                                Map.of("text", systemPrompt)
+                                Map.of("text", promptText)
                         ))
                 )
         );
+    }
 
-        return webClient.post()
-                .uri("/models/gemini-2.0-flash:generateContent?key=" + apiKey)
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(Map.class)
-                .map(response -> {
-                    try {
-                        List candidates = (List) response.get("candidates");
-                        Map candidate = (Map) candidates.get(0);
-                        Map content = (Map) candidate.get("content");
-                        List parts = (List) content.get("parts");
-                        Map firstPart = (Map) parts.get(0);
-                        String jsonText = (String) firstPart.get("text");
+    private IntentResult parseIntentResult(Map response) {
+        try {
+            List candidates = (List) response.get("candidates");
+            if (candidates == null || candidates.isEmpty()) return new IntentResult("unknown", null, null,null);
 
-                        System.out.println("Gemini raw response:\n" + jsonText);
+            Map candidate = (Map) candidates.get(0);
+            Map content = (Map) candidate.get("content");
+            List parts = (List) content.get("parts");
 
-                        // ✅ Gỡ bỏ markdown nếu có
-                        if (jsonText.startsWith("```")) {
-                            jsonText = jsonText.replaceAll("(?s)```(?:json)?\\s*(.*?)\\s*```", "$1").trim();
-                        }
+            if (parts == null || parts.isEmpty()) return new IntentResult("unknown", null, null,null);
 
-                        return objectMapper.readValue(jsonText, IntentResult.class);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return new IntentResult("unknown", null, null);
-                    }
-                });
+            Map firstPart = (Map) parts.get(0);
+            String jsonText = (String) firstPart.get("text");
+
+            // Nếu Gemini trả về JSON kèm markdown, loại bỏ chúng
+            if (jsonText.startsWith("```")) {
+                jsonText = jsonText.replaceAll("(?s)```(?:json)?\\s*(.*?)\\s*```", "$1").trim();
+            }
+
+            IntentResult result = objectMapper.readValue(jsonText, IntentResult.class);
+
+            // Kiểm tra thêm để tránh className hoặc teacherName bị null nếu không phù hợp intent
+            if ("list_students_by_class".equals(result.getIntent()) ||
+                    "count_students_by_class".equals(result.getIntent()) ||
+                    "count_teachers_by_class".equals(result.getIntent())) {
+                if (result.getClassName() == null || result.getClassName().isBlank()) {
+                    return new IntentResult("unknown", null, null,null);
+                }
+            } else if ("list_classes_of_teacher".equals(result.getIntent())) {
+                if (result.getTeacherName() == null || result.getTeacherName().isBlank()) {
+                    return new IntentResult("unknown", null, null,null);
+                }
+            }
+
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new IntentResult("unknown", null, null,null);
+        }
     }
 
     private Mono<String> callGemini(String prompt) {
-        Map<String, Object> requestBody = Map.of(
-                "contents", List.of(
-                        Map.of("parts", List.of(
-                                Map.of("text", prompt)
-                        ))
-                )
-        );
+        Map<String, Object> requestBody = createRequestBody(prompt);
 
         return webClient.post()
                 .uri("/models/gemini-2.0-flash:generateContent?key=" + apiKey)
                 .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(Map.class)
-                .map(response -> {
-                    try {
-                        List candidates = (List) response.get("candidates");
-                        Map candidate = (Map) candidates.get(0);
-                        Map content = (Map) candidate.get("content");
-                        List parts = (List) content.get("parts");
-                        Map firstPart = (Map) parts.get(0);
-                        return (String) firstPart.get("text");
-                    } catch (Exception e) {
-                        return "Không thể phân tích phản hồi từ Gemini.";
-                    }
-                });
+                .map(this::parseGeminiResponse);
+    }
+
+    private String parseGeminiResponse(Map response) {
+        try {
+            List candidates = (List) response.get("candidates");
+            Map candidate = (Map) candidates.get(0);
+            Map content = (Map) candidate.get("content");
+            List parts = (List) content.get("parts");
+            Map firstPart = (Map) parts.get(0);
+            return (String) firstPart.get("text");
+        } catch (Exception e) {
+            return "Không thể phân tích phản hồi từ Gemini.";
+        }
     }
 }

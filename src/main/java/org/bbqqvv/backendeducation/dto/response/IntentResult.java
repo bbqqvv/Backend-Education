@@ -8,8 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IntentResult {
-    private String intent;     // mã intent như: count_students_by_class
-    private String className;  // ví dụ: "12A1"
+    private String intent;
+    private String className;
     private String teacherName;
+    private String category;
 
 }
