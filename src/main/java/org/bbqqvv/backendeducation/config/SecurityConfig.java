@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -90,7 +89,7 @@ public class SecurityConfig {
 	private UrlBasedCorsConfigurationSource corsConfigurationSource() {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("http://localhost:8081", "http://192.168.1.4:8081", "http://192.168.1.6:8081", "http://192.168.71.172:8081", "http://192.168.71.235:8081")); // Thêm IP Expo
+		config.setAllowedOrigins(List.of("http://localhost:8081","http://localhost:5000", "http://192.168.1.4:8081", "http://192.168.1.6:8081", "http://192.168.71.172:8081", "http://192.168.71.235:8081")); // Thêm IP Expo
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.addAllowedHeader("*");
 		config.setAllowCredentials(true);
