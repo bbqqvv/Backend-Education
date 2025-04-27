@@ -123,7 +123,7 @@ public class OtpServiceImpl implements OtpService {
         String htmlContent = templateEngine.process("otp-email.html", context);
         helper.setText(htmlContent, true);
 
-        helper.addInline("logo", new ClassPathResource("images/logo-app.jpg"));
+        helper.addInline("logo", new ClassPathResource("static/images/logo-app.jpg"));
 
         mailSender.send(message);
     }

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sidebar Hệ Thống Điểm Danh</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --sidebar-bg: #ffffff;
+            --sidebar-active: #3498db;
+            --sidebar-hover: #f0f7ff;
+            --sidebar-text: #4a5568;
+            --sidebar-text-active: #3498db;
+            --sidebar-text-hover: #2c5282;
+            --sidebar-width: 280px;
+            --primary-color: #3498db;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --transition-speed: 0.2s;
+            --border-radius: 8px;
+            --sidebar-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        /* Sidebar Styling */
+        #sidebar {
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            min-height: 100vh;
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: all var(--transition-speed) ease;
+            box-shadow: var(--sidebar-shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem 1.5rem 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-header img {
+            height: 60px;
+            width: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header:hover img {
+            transform: scale(1.05);
+            border-color: var(--primary-color);
+        }
+
+        .system-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .system-version {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link {
+            color: var(--sidebar-text);
+            padding: 0.75rem 1.5rem;
+            margin: 0.15rem 1rem;
+            border-radius: var(--border-radius);
+            transition: all var(--transition-speed) ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background-color: var(--sidebar-hover);
+            color: var(--sidebar-text-hover);
+            transform: translateX(3px);
+        }
+
+        .nav-link.active {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--sidebar-text-active);
+            font-weight: 600;
+        }
+
+        .nav-link.active i {
+            color: var(--sidebar-text-active);
+        }
+
+        .nav-link i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+            color: #718096;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .logout-link {
+            color: var(--danger-color) !important;
+            background-color: rgba(231, 76, 60, 0.05) !important;
+            margin-top: auto;
+            margin-bottom: 1rem;
+        }
+
+        .logout-link:hover {
+            background-color: rgba(231, 76, 60, 0.1) !important;
+        }
+
+        .logout-link i {
+            color: var(--danger-color) !important;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-item .badge {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.65rem;
+            padding: 0.35em 0.6em;
+            font-weight: 600;
+        }
+
+        /* Active indicator */
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background-color: var(--primary-color);
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* Scrollbar styling */
+        .sidebar-menu::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                min-height: auto;
+                box-shadow: none;
+                border-right: none;
+            }
+
+            .sidebar-header {
+                padding: 1rem;
+                display: flex;
+                align-items: center;
+                text-align: left;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .sidebar-header img {
+                height: 40px;
+                width: 40px;
+                margin-bottom: 0;
+                margin-right: 15px;
+            }
+
+            .system-info {
+                text-align: left;
+            }
+
+            .nav-link {
+                padding: 0.75rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <img src="/static/images/splash.jpg" alt="Logo hệ thống điểm danh">
+        <div class="system-info">
+            <div class="system-name">HỆ THỐNG ĐIỂM DANH</div>
+            <div class="system-version">Phiên bản 1.0</div>
+        </div>
+    </div>
+
+    <div class="sidebar-menu">
+        <ul class="nav flex-column px-2">
+            <li class="nav-item">
+                <a class="nav-link active" href="/">
+                    <i class="bi bi-speedometer2"></i>
+                    <span>Bảng điều khiển</span>
+                    <span class="badge bg-primary rounded-pill">3</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/students">
+                    <i class="bi bi-people"></i>
+                    <span>Quản Lý Học Sinh</span>
+                    <span class="badge bg-success rounded-pill">Mới</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/reports">
+                    <i class="bi bi-bar-chart"></i>
+                    <span>Báo Cáo</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/camera">
+                    <i class="bi bi-camera-video"></i>
+                    <span>Điểm Danh</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/settings">
+                    <i class="bi bi-gear"></i>
+                    <span>Cài Đặt</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <ul class="nav flex-column px-2">
+        <li class="nav-item">
+            <a class="nav-link logout-link" href="/logout">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Đăng Xuất</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<!-- Bootstrap Bundle JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Active menu item based on current URL
+    document.addEventListener('DOMContentLoaded', function () {
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    });
+
+    // Smooth hover effect for menu items
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('mouseenter', function () {
+            this.style.transform = 'translateX(3px)';
+        });
+        link.addEventListener('mouseleave', function () {
+            if (!this.classList.contains('active')) {
+                this.style.transform = 'translateX(0)';
+            }
+        });
+    });
+</script>
+</body>
+</html>

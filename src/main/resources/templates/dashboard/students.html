@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Người Dùng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #6c757d;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --info-color: #17a2b8;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .role-badge {
+            font-size: 0.75rem;
+            padding: 0.35em 0.65em;
+        }
+
+        .badge-student {
+            background-color: var(--info-color);
+        }
+
+        .badge-teacher {
+            background-color: var(--warning-color);
+        }
+
+        .badge-admin {
+            background-color: var(--danger-color);
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header {
+            border-bottom: none;
+            background-color: #fff;
+        }
+
+        .table th {
+            border-top: none;
+            font-weight: 600;
+            color: #6c757d;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .modal-header {
+            border-bottom: none;
+        }
+
+        .form-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            {% include 'sidebar.html' %}
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Quản Lý Người Dùng</h1>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                        <i class="bi bi-plus-circle me-2"></i>Thêm Người Dùng
+                    </button>
+                </div>
+
+                <!-- Thông báo -->
+                <div id="alertMessage" class="alert alert-dismissible fade show" style="display: none;">
+                    <span id="alertText"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <!-- Bảng danh sách người dùng -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Danh Sách Người Dùng</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="usersTable" class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Ảnh</th>
+                                        <th>Họ Tên</th>
+                                        <th>Email</th>
+                                        <th>Mã Số</th>
+                                        <th>Vai Trò</th>
+                                        <th>Lớp Học</th>
+                                        <th>Ngày Tạo</th>
+                                        <th>Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dữ liệu sẽ được thêm bằng JavaScript -->
+                                    <tr>
+                                        <td>1</td>
+                                        <td><img src="/static/images/avatar1.jpg" class="user-avatar"></td>
+                                        <td>Nguyễn Văn A</td>
+                                        <td>nguyenvana@example.com</td>
+                                        <td>HS001</td>
+                                        <td><span class="badge role-badge badge-student">Học sinh</span></td>
+                                        <td>10A1</td>
+                                        <td>15/05/2023</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary action-btn edit-btn" data-id="1">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger action-btn delete-btn" data-id="1">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td><img src="/static/images/avatar2.jpg" class="user-avatar"></td>
+                                        <td>Trần Thị B</td>
+                                        <td>tranthib@example.com</td>
+                                        <td>GV001</td>
+                                        <td><span class="badge role-badge badge-teacher">Giáo viên</span></td>
+                                        <td>10A1, 10A2</td>
+                                        <td>20/08/2023</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary action-btn edit-btn" data-id="2">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger action-btn delete-btn" data-id="2">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Thêm Người Dùng -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="addUserModalLabel">Thêm Người Dùng Mới</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="addUserForm" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="form-section">
+                            <div class="form-section-title">Thông tin cơ bản</div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Họ và Tên <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="fullName" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" name="email" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Mã Số <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="userCode" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Vai Trò <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="role" required>
+                                        <option value="">Chọn vai trò</option>
+                                        <option value="STUDENT">Học sinh</option>
+                                        <option value="TEACHER">Giáo viên</option>
+                                        <option value="ADMIN">Quản trị viên</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">Thông tin lớp học</div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Lớp học (học sinh)</label>
+                                    <select class="form-select" name="studentClass">
+                                        <option value="">Chọn lớp</option>
+                                        <option value="10A1">10A1</option>
+                                        <option value="10A2">10A2</option>
+                                        <option value="11A1">11A1</option>
+                                        <option value="11A2">11A2</option>
+                                        <option value="12A1">12A1</option>
+                                        <option value="12A2">12A2</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Lớp giảng dạy (giáo viên)</label>
+                                    <select class="form-select" name="teachingClasses" multiple>
+                                        <option value="10A1">10A1</option>
+                                        <option value="10A2">10A2</option>
+                                        <option value="11A1">11A1</option>
+                                        <option value="11A2">11A2</option>
+                                        <option value="12A1">12A1</option>
+                                        <option value="12A2">12A2</option>
+                                    </select>
+                                    <small class="text-muted">Nhấn Ctrl để chọn nhiều lớp</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">Thông tin nhận diện</div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label class="form-label">Ảnh chân dung <span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control" name="faceImage" accept="image/*" required>
+                                    <small class="text-muted">Vui lòng tải lên ảnh rõ mặt để hệ thống nhận diện</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title">Thông tin cá nhân</div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Ngày sinh</label>
+                                    <input type="date" class="form-control" name="dateOfBirth">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Giới tính</label>
+                                    <select class="form-select" name="gender">
+                                        <option value="">Chọn giới tính</option>
+                                        <option value="MALE">Nam</option>
+                                        <option value="FEMALE">Nữ</option>
+                                        <option value="OTHER">Khác</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Số điện thoại</label>
+                                    <input type="tel" class="form-control" name="phoneNumber">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Địa chỉ</label>
+                                    <input type="text" class="form-control" name="address">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu Thông Tin</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Chỉnh Sửa Người Dùng -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="editUserModalLabel">Chỉnh Sửa Thông Tin Người Dùng</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editUserForm" enctype="multipart/form-data">
+                    <input type="hidden" name="id" id="editUserId">
+                    <div class="modal-body">
+                        <!-- Nội dung tương tự addUserModal, nhưng có thêm ID và hiển thị dữ liệu hiện tại -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Cập Nhật</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Xác nhận xóa -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Xác Nhận Xóa</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Bạn có chắc chắn muốn xóa người dùng này? Thao tác này không thể hoàn tác.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Khởi tạo DataTable
+            $('#usersTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/vi.json'
+                },
+                order: [[7, 'desc']] // Sắp xếp theo ngày tạo mới nhất
+            });
+
+            // Xử lý thay đổi vai trò để hiển thị các trường phù hợp
+            $('select[name="role"]').on('change', function() {
+                const role = $(this).val();
+                if (role === 'STUDENT') {
+                    $('select[name="studentClass"]').closest('.col-md-6').show();
+                    $('select[name="teachingClasses"]').closest('.col-md-6').hide();
+                } else if (role === 'TEACHER') {
+                    $('select[name="studentClass"]').closest('.col-md-6').hide();
+                    $('select[name="teachingClasses"]').closest('.col-md-6').show();
+                } else {
+                    $('select[name="studentClass"]').closest('.col-md-6').hide();
+                    $('select[name="teachingClasses"]').closest('.col-md-6').hide();
+                }
+            });
+
+            // Xử lý sự kiện thêm người dùng
+            $('#addUserForm').on('submit', function(e) {
+                e.preventDefault();
+                // Gửi dữ liệu form đến server bằng AJAX
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: '/api/users',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        $('#addUserModal').modal('hide');
+                        showAlert('Thêm người dùng thành công!', 'success');
+                        // Thêm hàng mới vào bảng
+                        addUserToTable(response);
+                        $('#addUserForm')[0].reset();
+                    },
+                    error: function() {
+                        showAlert('Có lỗi xảy ra khi thêm người dùng!', 'danger');
+                    }
+                });
+            });
+
+            // Xử lý sự kiện click nút chỉnh sửa
+            $(document).on('click', '.edit-btn', function() {
+                var userId = $(this).data('id');
+                // Lấy dữ liệu người dùng từ server bằng AJAX
+                $.get('/api/users/' + userId, function(data) {
+                    // Điền dữ liệu vào form chỉnh sửa
+                    fillEditForm(data);
+                    $('#editUserModal').modal('show');
+                });
+            });
+
+            // Xử lý sự kiện submit form chỉnh sửa
+            $('#editUserForm').on('submit', function(e) {
+                e.preventDefault();
+                var userId = $('#editUserId').val();
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: '/api/users/' + userId,
+                    type: 'PUT',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        $('#editUserModal').modal('hide');
+                        showAlert('Cập nhật thông tin người dùng thành công!', 'success');
+                        // Cập nhật lại hàng trong bảng
+                        updateUserInTable(response);
+                    },
+                    error: function() {
+                        showAlert('Có lỗi xảy ra khi cập nhật thông tin người dùng!', 'danger');
+                    }
+                });
+            });
+
+            // Xử lý sự kiện click nút xóa
+            var deleteUserId;
+            $(document).on('click', '.delete-btn', function() {
+                deleteUserId = $(this).data('id');
+                $('#confirmDeleteModal').modal('show');
+            });
+
+            // Xác nhận xóa
+            $('#confirmDeleteBtn').on('click', function() {
+                $.ajax({
+                    url: '/api/users/' + deleteUserId,
+                    type: 'DELETE',
+                    success: function() {
+                        $('#confirmDeleteModal').modal('hide');
+                        showAlert('Xóa người dùng thành công!', 'success');
+                        $(`button[data-id="${deleteUserId}"]`).closest('tr').remove();
+                    },
+                    error: function() {
+                        showAlert('Có lỗi xảy ra khi xóa người dùng!', 'danger');
+                    }
+                });
+            });
+
+            // Hiển thị thông báo
+            function showAlert(message, type) {
+                $('#alertMessage').removeClass('alert-success alert-danger').addClass('alert-' + type);
+                $('#alertText').text(message);
+                $('#alertMessage').fadeIn().delay(3000).fadeOut();
+            }
+
+            // Thêm người dùng vào bảng
+            function addUserToTable(user) {
+                const roleBadge = getRoleBadge(user.role);
+                const classes = user.role === 'STUDENT' ? user.studentClass :
+                              (user.role === 'TEACHER' ? user.teachingClasses.join(', ') : '');
+
+                const newRow = `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td><img src="${user.profile?.imageUrl || '/static/images/default-avatar.jpg'}" class="user-avatar"></td>
+                        <td>${user.fullName}</td>
+                        <td>${user.email}</td>
+                        <td>${user.userCode}</td>
+                        <td>${roleBadge}</td>
+                        <td>${classes}</td>
+                        <td>${new Date(user.createdAt).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary action-btn edit-btn" data-id="${user.id}">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger action-btn delete-btn" data-id="${user.id}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+                $('#usersTable tbody').prepend(newRow);
+            }
+
+            // Cập nhật người dùng trong bảng
+            function updateUserInTable(user) {
+                const row = $(`button[data-id="${user.id}"]`).closest('tr');
+                const roleBadge = getRoleBadge(user.role);
+                const classes = user.role === 'STUDENT' ? user.studentClass :
+                              (user.role === 'TEACHER' ? user.teachingClasses.join(', ') : '');
+
+                row.find('td:eq(2)').text(user.fullName);
+                row.find('td:eq(3)').text(user.email);
+                row.find('td:eq(4)').text(user.userCode);
+                row.find('td:eq(5)').html(roleBadge);
+                row.find('td:eq(6)').text(classes);
+                if (user.profile?.imageUrl) {
+                    row.find('td:eq(1) img').attr('src', user.profile.imageUrl);
+                }
+            }
+
+            // Điền dữ liệu vào form chỉnh sửa
+            function fillEditForm(user) {
+                $('#editUserId').val(user.id);
+                $('#editFullName').val(user.fullName);
+                $('#editEmail').val(user.email);
+                $('#editUserCode').val(user.userCode);
+                $('#editRole').val(user.role);
+
+                if (user.role === 'STUDENT') {
+                    $('#editStudentClass').val(user.studentClass);
+                } else if (user.role === 'TEACHER') {
+                    $('#editTeachingClasses').val(user.teachingClasses);
+                }
+
+                if (user.profile) {
+                    $('#editDateOfBirth').val(user.profile.dateOfBirth);
+                    $('#editGender').val(user.profile.gender);
+                    $('#editPhoneNumber').val(user.profile.phoneNumber);
+                    $('#editAddress').val(user.profile.address);
+                    $('#currentUserPhoto').attr('src', user.profile.imageUrl || '/static/images/default-avatar.jpg');
+                }
+            }
+
+            // Tạo badge vai trò
+            function getRoleBadge(role) {
+                switch(role) {
+                    case 'STUDENT':
+                        return '<span class="badge role-badge badge-student">Học sinh</span>';
+                    case 'TEACHER':
+                        return '<span class="badge role-badge badge-teacher">Giáo viên</span>';
+                    case 'ADMIN':
+                        return '<span class="badge role-badge badge-admin">Quản trị</span>';
+                    default:
+                        return '<span class="badge role-badge bg-secondary">' + role + '</span>';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

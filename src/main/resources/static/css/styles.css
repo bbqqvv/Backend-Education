@@ -1,0 +1,33 @@
+.sidebar {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #4e73df 0%, #224abe 100%);
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 5px 0;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.nav-link:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active {
+    color: white;
+    background: rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+.display-4 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}

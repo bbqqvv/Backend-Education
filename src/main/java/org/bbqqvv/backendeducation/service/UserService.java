@@ -5,6 +5,7 @@ import org.bbqqvv.backendeducation.dto.request.UpdateProfileRequest;
 import org.bbqqvv.backendeducation.dto.request.UserCreationRequest;
 import org.bbqqvv.backendeducation.dto.response.UserResponse;
 import org.bbqqvv.backendeducation.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
@@ -26,4 +27,6 @@ public interface UserService {
     List<UserResponse> getStudentsForTeacherClass(String teacherEmail, String className);
 
     UserResponse getCurrentUser(String username);
+
+    void uploadFaceImages(String username, List<MultipartFile> files);
 }

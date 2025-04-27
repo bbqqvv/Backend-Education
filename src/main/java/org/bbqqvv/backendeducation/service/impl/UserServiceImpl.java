@@ -17,8 +17,10 @@ import org.bbqqvv.backendeducation.mapper.UserMapper;
 import org.bbqqvv.backendeducation.repository.UserRepository;
 import org.bbqqvv.backendeducation.repository.UserProfileRepository;
 import org.bbqqvv.backendeducation.service.UserService;
+import org.bbqqvv.backendeducation.service.img.CloudinaryService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
@@ -34,6 +36,7 @@ public class UserServiceImpl implements UserService {
     UserProfileRepository userProfileRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
+     CloudinaryService cloudinaryService;
 
     @Override
     public UserResponse createUser(UserCreationRequest request) {
@@ -198,6 +201,29 @@ public class UserServiceImpl implements UserService {
                 .orElse(null);
 
         return userMapper.toUserResponse(user, profile);
+    }
+
+    @Override
+    public void uploadFaceImages(String username, List<MultipartFile> files) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        UserProfile profile = userProfileRepository.findByUserId(user.getId())
+                .orElseGet(() -> {
+                    UserProfile newProfile = new UserProfile();
+                    newProfile.setUserId(user.getId());
+                    return newProfile;
+                });
+
+        List<String> uploadedUrls = cloudinaryService.uploadImages(files);
+
+        if (profile.getFaceImages() == null) {
+            profile.setFaceImages(uploadedUrls);
+        } else {
+            profile.getFaceImages().addAll(uploadedUrls);
+        }
+
+        userProfileRepository.save(profile);
     }
 
 

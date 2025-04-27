@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
@@ -106,6 +107,17 @@ public class UserController {
                 .success(true)
                 .message("Lấy danh sách học sinh thành công")
                 .data(userService.getStudentsForTeacherClass(teacherEmail, className))
+                .build();
+    }
+    @PostMapping("/upload-face-images")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ApiResponse<String> uploadFaceImages(@RequestParam("files") List<MultipartFile> files,
+                                                @AuthenticationPrincipal UserDetails userDetails) {
+        userService.uploadFaceImages(userDetails.getUsername(), files);
+        return ApiResponse.<String>builder()
+                .success(true)
+                .message("Upload ảnh khuôn mặt thành công")
+                .data("OK")
                 .build();
     }
 

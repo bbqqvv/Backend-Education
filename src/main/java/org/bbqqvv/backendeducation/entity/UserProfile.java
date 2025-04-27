@@ -5,6 +5,7 @@ import nonapi.io.github.classgraph.json.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDate;
+import java.util.List;
 
 @Document(collection = "user_profiles")
 @Getter
@@ -34,6 +35,9 @@ public class UserProfile {
 
     @Field(name = "profile_picture")
     private String profilePicture;
+
+    @Field(name = "face_images")
+    private List<String> faceImages;
 
     @Field(name = "father_name")
     private String fatherName;

@@ -19,6 +19,7 @@ public class UserResponse {
     private Set<String> teachingClasses;
     private String role;
     private UserProfileResponse profile;
+    private Set<String> faceImages;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

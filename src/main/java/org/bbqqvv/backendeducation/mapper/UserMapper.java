@@ -20,8 +20,8 @@ public interface UserMapper {
     @Mapping(target = "profile", source = "profile") // ánh xạ sang UserProfileResponse
     @Mapping(target = "id", source = "user.id")
     @Mapping(target = "teachingClasses", source = "user.teachingClasses")
+    @Mapping(target = "faceImages", source = "profile.faceImages") // ánh xạ faceImages từ UserProfile
     UserResponse toUserResponse(User user, UserProfile profile);
 
     MemberInfoResponse toMemberInfoResponse(User user);
-
 }
