@@ -70,4 +70,29 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .map(attendanceMapper::toResponse)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<AttendanceResponse> getAttendanceByClassName(String className) {
+        List<AttendanceRecord> records = attendanceRepository.findByClassName(className);
+        return records.stream()
+                .map(attendanceMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AttendanceResponse> getAttendanceByStudentId(String studentId) {
+        List<AttendanceRecord> records = attendanceRepository.findByStudentId(studentId);
+        return records.stream()
+                .map(attendanceMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public List<AttendanceResponse> getAttendanceByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        List<AttendanceRecord> records = attendanceRepository.findByDateBetween(startDate, endDate);
+        return records.stream()
+                .map(attendanceMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+    
+
 }
